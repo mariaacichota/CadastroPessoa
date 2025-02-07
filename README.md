@@ -1,6 +1,7 @@
 # CadastroPessoa
 
-Delphi na prática
+Delphi na prática:
+
 Projeto para cadastro de pessoas (campos: nome, data nascimento e saldo devedor). Os dados do projeto são salvos, em um primeiro momento serão em memória e depois são gravados/buscados a partir do banco de dados.
 A aplicação permite:
 > Gravar o cadastro em memória permite gravar N registros em memória;
