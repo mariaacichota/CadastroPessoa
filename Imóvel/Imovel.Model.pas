@@ -20,7 +20,7 @@ type
 
   public
     constructor Create(Codigo, Hospedes: Integer; Url, Nome, Descricao: String;
-                        Preco: Double; Caracteristica: TCaracteristica; Avaliacao: TAvaliacao);
+                          Preco: Double; Caracteristica: TObjectList<TCaracteristica>; Avaliacao: TAvaliacao);
     destructor Destroy;
 
     property Codigo          : Integer                      read FCodigo          write FCodigo;
@@ -38,8 +38,9 @@ implementation
 
 { TImovel }
 
-constructor TImovel.Create(Codigo, Hospedes: Integer; Url, Nome, Descricao: String;
-  Preco: Double; Caracteristica: TObjectList<TCaracteristica>; Avaliacao: TAvaliacao);
+constructor TImovel.Create(Codigo, Hospedes: Integer; Url, Nome,
+  Descricao: String; Preco: Double;
+  Caracteristica: TObjectList<TCaracteristica>; Avaliacao: TAvaliacao);
 begin
   FCodigo          := Codigo;
   FHospedes        := Hospedes;

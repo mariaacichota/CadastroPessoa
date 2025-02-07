@@ -11,8 +11,6 @@ object frmPessoa: TfrmPessoa
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = True
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 15
   object pgcGeral: TPageControl
@@ -76,7 +74,6 @@ object frmPessoa: TfrmPessoa
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
-          OnClick = btnSalvarPedidoClick
         end
         object DateTimePicker1: TDateTimePicker
           Left = 428
@@ -117,7 +114,6 @@ object frmPessoa: TfrmPessoa
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-            OnClick = btnNovoPedidoClick
           end
           object btnExcluir: TButton
             Left = 295
@@ -132,7 +128,6 @@ object frmPessoa: TfrmPessoa
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 1
-            OnClick = btnSalvarPedidoClick
           end
           object btnCarregar: TButton
             Left = 416
@@ -147,7 +142,6 @@ object frmPessoa: TfrmPessoa
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 2
-            OnClick = btnCancelarPedidoClick
           end
         end
       end
@@ -172,7 +166,6 @@ object frmPessoa: TfrmPessoa
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          OnClick = btnNovoPedidoClick
         end
       end
     end
@@ -200,7 +193,6 @@ object frmPessoa: TfrmPessoa
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          OnClick = btnNovoPedidoClick
         end
       end
       object pnlGridImoveis: TPanel
@@ -223,7 +215,6 @@ object frmPessoa: TfrmPessoa
           TitleFont.Height = -12
           TitleFont.Name = 'Segoe UI'
           TitleFont.Style = []
-          OnKeyDown = gridPedidosVendaKeyDown
         end
       end
     end

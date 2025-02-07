@@ -3,7 +3,7 @@ unit Caracteristica.Model;
 interface
 
 uses
-  SysUtils, Classes, Database.Model, FireDAC.Comp.Client;
+  SysUtils, Classes, FireDAC.Comp.Client;
 
 type
   TCaracteristica = class
@@ -11,7 +11,6 @@ type
     FNome : String;
     FIcone: String;
   public
-//    function ObterProduto(CodigoProduto: Integer): IProduto;
     constructor Create(Nome, Icone: String);
 
     property Nome : String read FNome  write FNome;

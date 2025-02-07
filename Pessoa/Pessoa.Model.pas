@@ -15,9 +15,9 @@ type
     constructor Create(const Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
     function ToString: string; override;
 
-    property Nome: string read FNome write FNome;
-    property DataNascimento: TDate read FDataNascimento write FDataNascimento;
-    property SaldoDevedor: Currency read FSaldoDevedor write FSaldoDevedor;
+    property Nome           : String read FNome           write FNome;
+    property DataNascimento : TDate  read FDataNascimento write FDataNascimento;
+    property SaldoDevedor   : Double read FSaldoDevedor   write FSaldoDevedor;
   end;
 
 implementation

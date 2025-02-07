@@ -1,3 +1,5 @@
+unit Pessoa.ViewModel;
+
 interface
 
 uses
@@ -5,8 +7,7 @@ uses
 
 type
   TPessoaViewModel = class
-uses
-  FireDAC.Comp.Client;PssoaViewModel = class
+
   private
     FPessoas: TObjectList<TPessoa>;
     FConn: TFDConnection;
