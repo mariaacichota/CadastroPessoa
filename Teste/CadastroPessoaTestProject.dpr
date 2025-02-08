@@ -7,16 +7,16 @@ uses
   System.SysUtils,
   {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-  {$ENDIF}
+  {$ENDIF }
   DUnitX.Loggers.Console,
   DUnitX.Loggers.Xml.NUnit,
   DUnitX.TestFramework,
   CadastroPessoaTest in 'CadastroPessoaTest.pas',
-  Pessoa.ViewModel in '..\Pessoa\Pessoa.ViewModel.pas',
-  Pessoa.Model in '..\Pessoa\Pessoa.Model.pas',
   Imovel.Model in '..\Imóvel\Imovel.Model.pas',
   Caracteristica.Model in '..\Característica\Caracteristica.Model.pas',
-  Avaliacao.Model in '..\Avaliação\Avaliacao.Model.pas';
+  Avaliacao.Model in '..\Avaliação\Avaliacao.Model.pas',
+  Principal.ViewModel in '..\Principal\Principal.ViewModel.pas',
+  Pessoa.Model in '..\Pessoa\Pessoa.Model.pas';
 
 var
   runner: ITestRunner;

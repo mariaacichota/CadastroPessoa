@@ -2,7 +2,7 @@ unit CadastroPessoaTest;
 
 interface
 uses
-  DUnitX.TestFramework, Pessoa.ViewModel, Pessoa.Model, Data.DB, FireDAC.Comp.Client,
+  DUnitX.TestFramework, Principal.ViewModel, Pessoa.Model, Data.DB, FireDAC.Comp.Client,
   FireDAC.Phys.MSSQL, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.DApt, FireDAC.Stan.Async;
 
 type
@@ -11,7 +11,7 @@ type
   TCadastroPessoaTest = class(TObject)
   private
     FConn: TFDConnection;
-    FViewModel: TPessoaViewModel;
+    FViewModel: TPrincipalViewModel;
   public
     [Setup]
     procedure Setup;
@@ -60,7 +60,7 @@ begin
   FConn.Params.Add('DriverID=MSSQL');
   FConn.Connected := True;
 
-  FViewModel := TPessoaViewModel.Create(FConn);
+  FViewModel := TPrincipalViewModel.Create(FConn);
 end;
 
 procedure TCadastroPessoaTest.TearDown;
