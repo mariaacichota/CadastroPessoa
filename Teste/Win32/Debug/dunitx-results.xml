@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<test-results name="C:\Repositório\CadastroPessoa\Teste\Win32\Debug\CadastroPessoaTestProject.exe" total="6" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2025-02-08" time="2.880">
+  <culture-info current-culture="en" current-uiculture="en" />
+  <test-suite type="Assembly" name="CadastroPessoaTestProject.exe" executed="true" result="Success" success="True" time="2.880" asserts="0">
+    <results>
+        <test-suite type="Namespace" name="CadastroPessoaTest" executed="true" result="Success" success="True" time="2.880" asserts="0" >
+          <results>
+              <test-suite type="Fixture" name="TCadastroPessoaTest" executed="True" result="Success" success="True" time="2.880" >
+                <results>
+                  <test-case name="TestCarregarPessoaMemoria" executed="True" result="Success" success="True" time="0.145" asserts="0" />
+                  <test-case name="TestAdicionarPessoa" executed="True" result="Success" success="True" time="0.091" asserts="0" />
+                  <test-case name="TestGravarPessoaBanco" executed="True" result="Success" success="True" time="0.298" asserts="0" />
+                  <test-case name="TestCarregarPessoaBanco" executed="True" result="Success" success="True" time="0.093" asserts="0" />
+                  <test-case name="TestExcluirPessoaPorId" executed="True" result="Success" success="True" time="0.138" asserts="0" />
+                  <test-case name="TestBuscarImoveisAPI" executed="True" result="Success" success="True" time="0.585" asserts="0" />
+                </results>
+              </test-suite>
+          </results>
+        </test-suite>
+    </results>
+  </test-suite>
+</test-results>
