@@ -277,7 +277,6 @@ begin
             CaracteristicasArray.Items[I].GetValue<string>('icone')
           );
           CaracteristicasList.Add(Caracteristica);
-                    ShowMessage('Característica adicionada: ' + Caracteristica.Nome);
         end;
       end;
 
