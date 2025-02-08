@@ -1,0 +1,10 @@
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PESSOA]') AND type in (N'U'))
+BEGIN
+	CREATE TABLE PESSOA (
+		Id INT PRIMARY KEY IDENTITY(1,1), -- Chave primária com incremento automático
+		NOME VARCHAR(100) NOT NULL,
+		DATA_NASCIMENTO DATE NOT NULL,
+		SALDO_DEVEDOR DECIMAL (19,6) NOT NULL DEFAULT (0)
+	);
+END
+

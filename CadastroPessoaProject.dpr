@@ -2,12 +2,13 @@ program CadastroPessoaProject;
 
 uses
   Vcl.Forms,
-  Avaliacao.Model      in 'Avaliação\Avaliacao.Model.pas',
+  Avaliacao.Model in 'Avaliação\Avaliacao.Model.pas',
   Caracteristica.Model in 'Característica\Caracteristica.Model.pas',
-  Imovel.Model         in 'Imóvel\Imovel.Model.pas',
-  Pessoa.Model         in 'Pessoa\Pessoa.Model.pas',
-  Pessoa.View          in 'Pessoa\Pessoa.View.pas' {frmPessoa},
-  Pessoa.ViewModel     in 'Pessoa\Pessoa.ViewModel.pas';
+  Imovel.Model in 'Imóvel\Imovel.Model.pas',
+  Pessoa.Model in 'Pessoa\Pessoa.Model.pas',
+  Pessoa.View in 'Pessoa\Pessoa.View.pas' {frmPessoa},
+  Pessoa.ViewModel in 'Pessoa\Pessoa.ViewModel.pas',
+  Pessoa.Auxiliar.View in 'Pessoa\Pessoa.Auxiliar.View.pas' {frmAuxiliarPessoa};
 
 {$R *.res}
 

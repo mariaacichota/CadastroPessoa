@@ -11,20 +11,23 @@ type
     FNome           : String;
     FDataNascimento : TDate;
     FSaldoDevedor   : Double;
+    FId: Integer;
   public
-    constructor Create(const Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
+    constructor Create(const Id: Integer; Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
     function ToString: string; override;
 
-    property Nome           : String read FNome           write FNome;
-    property DataNascimento : TDate  read FDataNascimento write FDataNascimento;
-    property SaldoDevedor   : Double read FSaldoDevedor   write FSaldoDevedor;
+    property Id             : Integer read FId             write FId;
+    property Nome           : String  read FNome           write FNome;
+    property DataNascimento : TDate   read FDataNascimento write FDataNascimento;
+    property SaldoDevedor   : Double  read FSaldoDevedor   write FSaldoDevedor;
   end;
 
 implementation
 
-constructor TPessoa.Create(const Nome: string; DataNascimento: TDate;
+constructor TPessoa.Create(const Id: Integer; Nome: string; DataNascimento: TDate;
   SaldoDevedor: Double);
 begin
+  FId             := Id;
   FNome           := Nome;
   FDataNascimento := DataNascimento;
   FSaldoDevedor   := SaldoDevedor;

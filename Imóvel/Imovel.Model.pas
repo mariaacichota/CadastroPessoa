@@ -56,11 +56,9 @@ begin
   FDescricao := Descricao;
   FPreco     := Preco;
   FAvaliacao := Avaliacao;
-
-  if Assigned(Caracteristicas) then
-    FCaracteristicas := Caracteristicas
-  else
-    FCaracteristicas := TObjectList<TCaracteristica>.Create;
+  FCaracteristicas := TObjectList<TCaracteristica>.Create;
+  if Assigned(Caracteristica) then
+    FCaracteristicas.AddRange(Caracteristica);
 end;
 
 destructor TImovel.Destroy;
