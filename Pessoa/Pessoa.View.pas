@@ -9,7 +9,8 @@ uses
   Vcl.ComCtrls, FireDAC.Comp.Client, Pessoa.ViewModel, Pessoa.Auxiliar.View,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
-  FireDAC.Phys, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait;
+  FireDAC.Phys, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait,
+  Vcl.Mask;
 
 type
   TfrmPessoa = class(TForm)
@@ -41,9 +42,12 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure btnBuscarImoveisClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure edtSaldoDevedorExit(Sender: TObject);
   private
     FViewModel: TPessoaViewModel;
     FConn     : TFDConnection;
+    FSaldoDevedor: Double;
+    property SaldoDevedor: Double read FSaldoDevedor write FSaldoDevedor;
   public
     destructor Destroy; override;
   end;
@@ -70,9 +74,30 @@ begin
   inherited;
 end;
 
-procedure TfrmPessoa.btnAdicionarClick(Sender: TObject);
+procedure TfrmPessoa.edtSaldoDevedorExit(Sender: TObject);
+var
+  TextOnEdit: UnicodeString;
+  Value: Currency;
 begin
-  FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, StrToFloat(EdtSaldoDevedor.Text));
+  TextOnEdit := EdtSaldoDevedor.Text;
+
+  if EdtSaldoDevedor.Text = EmptyStr then
+    TextOnEdit := '0';
+
+  if TryStrToCurr(TextOnEdit, Value) then
+  begin
+    if  StrToFloat(EdtSaldoDevedor.Text) < 0 then
+      ShowMessage('Informe um valor válido no campo de Saldo Devedor.')
+    else
+      FSaldoDevedor := StrToFloat(TextOnEdit);
+  end
+  else
+    ShowMessage('Informe um valor válido no campo de Saldo Devedor.');
+end;
+
+procedure TfrmPessoa.btnAdicionarClick(Sender: TObject);
+begin
+  FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, FSaldoDevedor);
 end;
 
 procedure TfrmPessoa.btnBuscarImoveisClick(Sender: TObject);
@@ -100,6 +125,8 @@ begin
   FViewModel.CarregarPessoaBanco;
 
   frmAuxiliarPessoa := TfrmAuxiliarPessoa.Create(nil, FViewModel);
+  frmAuxiliarPessoa.pnlTipExcluir.Visible := True;
+  frmAuxiliarPessoa.lblTipExcluir.Visible := True;
   try
     IdSelecionado := frmAuxiliarPessoa.SelecionarPessoa;
     if IdSelecionado > 0 then

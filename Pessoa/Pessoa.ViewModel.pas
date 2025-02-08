@@ -33,6 +33,7 @@ type
     procedure CriarMemTableImovel;
     procedure PopularMemTablePessoa(MemTable: TFDMemTable; Id: Integer; Nome: String; DataNascimento: TDate; SaldoDevedor: Double);
     procedure PopularMemTableImovel(MemTable: TFDMemTable; Codigo, Nome: String; Preco: Double; Caracteristicas: TObjectList<TCaracteristica>);
+    procedure LimparDadosMemTable(MemTable: TFDMemTable);
 
     function JSONParaImovel(JSON: string): TObjectList<TImovel>;
     function ObterImoveis: TObjectList<TImovel>;
@@ -118,6 +119,7 @@ begin
   try
     Response := HTTP.Get('https://developers.silbeck.com.br/mocks/apiteste/v2/aptos').ContentAsString;
     FImoveis := JSONParaImovel(Response);
+    LimparDadosMemTable(FmtImovel);
 
     for Imovel in FImoveis do
     begin
@@ -135,6 +137,7 @@ var
   Query: TFDQuery;
   Pessoa: TPessoa;
 begin
+  LimparDadosMemTable(FmtPessoa);
   FMemTableAtual := FmtPessoa;
   Query := TFDQuery.Create(nil);
   try
@@ -165,6 +168,7 @@ var
   Pessoas: TObjectList<TPessoa>;
   Pessoa: TPessoa;
 begin
+  LimparDadosMemTable(FmtPessoaMemoria);
   Pessoas := ObterPessoas;
   MemTableAtual := FmtPessoaMemoria;
   for Pessoa in Pessoas do
@@ -308,6 +312,11 @@ begin
   finally
     JSONArray.Free;
   end;
+end;
+
+procedure TPessoaViewModel.LimparDadosMemTable(MemTable: TFDMemTable);
+begin
+  MemTable.EmptyDataSet;
 end;
 
 function TPessoaViewModel.ObterImoveis: TObjectList<TImovel>;

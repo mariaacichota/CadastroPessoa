@@ -20,7 +20,7 @@ object frmPessoa: TfrmPessoa
     Top = 0
     Width = 1048
     Height = 270
-    ActivePage = tabBuscaImovel
+    ActivePage = tabCadastroPessoa
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
@@ -60,9 +60,10 @@ object frmPessoa: TfrmPessoa
           EditLabel.Height = 15
           EditLabel.Caption = 'Saldo Devedor'
           TabOrder = 1
+          OnExit = edtSaldoDevedorExit
         end
         object btnAdicionar: TButton
-          Left = 663
+          Left = 655
           Top = 47
           Width = 162
           Height = 25
