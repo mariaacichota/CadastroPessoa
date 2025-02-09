@@ -20,7 +20,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 0
     Width = 1048
     Height = 270
-    ActivePage = tabCadastroPessoa
+    ActivePage = tabBuscaImovel
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
@@ -59,7 +59,7 @@ object frmPrincipal: TfrmPrincipal
           EditLabel.Width = 76
           EditLabel.Height = 15
           EditLabel.Caption = 'Saldo Devedor'
-          TabOrder = 1
+          TabOrder = 2
           OnExit = edtSaldoDevedorExit
         end
         object btnAdicionar: TButton
@@ -74,17 +74,18 @@ object frmPrincipal: TfrmPrincipal
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 2
+          TabOrder = 3
           OnClick = btnAdicionarClick
         end
         object edtDataNascimento: TDateTimePicker
-          Left = 428
+          Left = 436
           Top = 48
           Width = 121
           Height = 23
           Date = 45694.405760358790000000
           Time = 45694.405760358790000000
-          TabOrder = 3
+          TabOrder = 1
+          OnExit = edtDataNascimentoExit
         end
       end
       object gbBancoDeDados: TGroupBox
@@ -107,7 +108,7 @@ object frmPrincipal: TfrmPrincipal
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 0
+          TabOrder = 2
           OnClick = btnCarregarClick
         end
         object btnExcluir: TButton
@@ -137,7 +138,7 @@ object frmPrincipal: TfrmPrincipal
           Font.Name = 'Segoe UI'
           Font.Style = [fsBold]
           ParentFont = False
-          TabOrder = 2
+          TabOrder = 0
           OnClick = btnGravarClick
         end
       end
@@ -168,10 +169,6 @@ object frmPrincipal: TfrmPrincipal
     object tabBuscaImovel: TTabSheet
       Caption = 'Im'#243'veis'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0

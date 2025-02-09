@@ -43,10 +43,12 @@ type
     procedure btnBuscarImoveisClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure edtSaldoDevedorExit(Sender: TObject);
+    procedure edtDataNascimentoExit(Sender: TObject);
   private
     FViewModel: TPrincipalViewModel;
     FConn     : TFDConnection;
     FSaldoDevedor: Double;
+    procedure LimparCampos;
     property SaldoDevedor: Double read FSaldoDevedor write FSaldoDevedor;
   public
     destructor Destroy; override;
@@ -65,16 +67,31 @@ implementation
 begin
   FConn := Conexao;
   FViewModel := TPrincipalViewModel.Create(FConn);
+  PgcGeral.TabIndex := 0;
+  LimparCampos;
 end;
 
-destructor TfrmPrincipal.Destroy;
+procedure TfrmPrincipal.LimparCampos;
+begin
+  edtNome.Text           := EmptyStr;
+  edtSaldoDevedor.Text   := EmptyStr;
+  edtDataNascimento.Date := Now;
+end;
+
+destructor TfrmPrincipal.Destroy;
 begin
   FViewModel.Free;
   FConn.Free;
   inherited;
 end;
 
-procedure TfrmPrincipal.edtSaldoDevedorExit(Sender: TObject);
+procedure TfrmPrincipal.edtDataNascimentoExit(Sender: TObject);
+begin
+  if edtDataNascimento.Date > Now then
+    ShowMessage('A data de nascimento não pode ser maior que a data atual.');
+end;
+
+procedure TfrmPrincipal.edtSaldoDevedorExit(Sender: TObject);
 var
   TextOnEdit: UnicodeString;
   Value: Currency;
@@ -86,7 +103,7 @@ begin
 
   if TryStrToCurr(TextOnEdit, Value) then
   begin
-    if  StrToFloat(EdtSaldoDevedor.Text) < 0 then
+    if  StrToFloat(TextOnEdit) < 0 then
       ShowMessage('Informe um valor válido no campo de Saldo Devedor.')
     else
       FSaldoDevedor := StrToFloat(TextOnEdit);
@@ -98,6 +115,8 @@ end;
 procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
   FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, FSaldoDevedor);
+  ShowMessage('Os dados de '+ EdtNome.Text +' foram adicionados a memória com sucesso!');
+  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnBuscarImoveisClick(Sender: TObject);
@@ -109,6 +128,7 @@ end;
 procedure TfrmPrincipal.btnCarregarClick(Sender: TObject);
 begin
   FViewModel.CarregarPessoaBanco;
+  ShowMessage('Os dados adicionados no banco foram carregados na memória com sucesso!');
 end;
 
 procedure TfrmPrincipal.btnExcluirClick(Sender: TObject);
@@ -145,11 +165,14 @@ begin
   finally
     frmAuxiliarPrincipal.Free;
   end;
+
+  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
 begin
   FViewModel.GravarPessoaBanco;
+  ShowMessage('Os dados de '+ EdtNome.Text +' foram salvos no banco de dados com sucesso!');
 end;
 
 procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);
