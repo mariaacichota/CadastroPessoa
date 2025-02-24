@@ -1,18 +1,54 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<test-results name="C:\Repositório\CadastroPessoa\Teste\Win32\Debug\CadastroPessoaTestProject.exe" total="6" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2025-02-08" time="2.195">
+<test-results name="C:\Repositório\CadastroPessoa\Teste\Win32\Debug\CadastroPessoaTestProject.exe" total="6" errors="0" failures="4" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2025-02-08" time="10.895">
   <culture-info current-culture="en" current-uiculture="en" />
-  <test-suite type="Assembly" name="CadastroPessoaTestProject.exe" executed="true" result="Success" success="True" time="2.195" asserts="0">
+  <test-suite type="Assembly" name="CadastroPessoaTestProject.exe" executed="true" result="Failure" success="False" time="10.895" asserts="0">
     <results>
-        <test-suite type="Namespace" name="CadastroPessoaTest" executed="true" result="Success" success="True" time="2.195" asserts="0" >
+        <test-suite type="Namespace" name="CadastroPessoaTest" executed="true" result="Failure" success="False" time="10.895" asserts="0" >
           <results>
-              <test-suite type="Fixture" name="TCadastroPessoaTest" executed="True" result="Success" success="True" time="2.195" >
+              <test-suite type="Fixture" name="TCadastroPessoaTest" executed="True" result="Failure" success="False" time="10.895" >
                 <results>
-                  <test-case name="TestCarregarPessoaMemoria" executed="True" result="Success" success="True" time="0.117" asserts="0" />
-                  <test-case name="TestAdicionarPessoa" executed="True" result="Success" success="True" time="0.002" asserts="0" />
-                  <test-case name="TestGravarPessoaBanco" executed="True" result="Success" success="True" time="0.005" asserts="0" />
-                  <test-case name="TestCarregarPessoaBanco" executed="True" result="Success" success="True" time="0.097" asserts="0" />
-                  <test-case name="TestExcluirPessoaPorId" executed="True" result="Success" success="True" time="0.009" asserts="0" />
-                  <test-case name="TestBuscarImoveisAPI" executed="True" result="Success" success="True" time="1.313" asserts="0" />
+                  <test-case name="TestCarregarPessoaMemoria" executed="True" result="Success" success="True" time="9.636" asserts="0" />
+                  <test-case name="TestAdicionarPessoa" executed="True" result="Failure" success="False" time="0.016" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Expected [1] but got [3] ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="TestGravarPessoaBanco" executed="True" result="Failure" success="False" time="0.012" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Expected [1] but got [4] ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="TestCarregarPessoaBanco" executed="True" result="Failure" success="False" time="0.004" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Expected [1] but got [4] ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="TestExcluirPessoaPorId" executed="True" result="Failure" success="False" time="0.005" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Expected [0] but got [3] ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="TestBuscarImoveisAPI" executed="True" result="Success" success="True" time="0.905" asserts="0" />
                 </results>
               </test-suite>
           </results>

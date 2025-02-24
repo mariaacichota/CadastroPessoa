@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait,
-  Vcl.Mask;
+  Vcl.Mask, Conexao.Model;
 
 type
   TfrmPrincipal = class(TForm)
@@ -34,7 +34,8 @@ type
     btnAdicionar: TButton;
     edtDataNascimento: TDateTimePicker;
     dsImovel: TDataSource;
-    Conexao: TFDConnection;
+    ConexaoErrada: TFDConnection;
+    lblStatus: TLabel;
     procedure btnAdicionarClick(Sender: TObject);
     procedure btnCarregarClick(Sender: TObject);
     procedure btnMostrarClick(Sender: TObject);
@@ -65,7 +66,7 @@ implementation
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
-  FConn := Conexao;
+  FConn := Conexao.Model.Connect;
   FViewModel := TPrincipalViewModel.Create(FConn);
   PgcGeral.TabIndex := 0;
   LimparCampos;
@@ -87,8 +88,8 @@ end;
 
 procedure TfrmPrincipal.edtDataNascimentoExit(Sender: TObject);
 begin
-  if edtDataNascimento.Date > Now then
-    ShowMessage('A data de nascimento não pode ser maior que a data atual.');
+//  if edtDataNascimento.Date > Now then
+//    ShowMessage('A data de nascimento não pode ser maior que a data atual.');
 end;
 
 procedure TfrmPrincipal.edtSaldoDevedorExit(Sender: TObject);
@@ -96,27 +97,26 @@ var
   TextOnEdit: UnicodeString;
   Value: Currency;
 begin
-  TextOnEdit := EdtSaldoDevedor.Text;
-
-  if EdtSaldoDevedor.Text = EmptyStr then
-    TextOnEdit := '0';
-
-  if TryStrToCurr(TextOnEdit, Value) then
-  begin
-    if  StrToFloat(TextOnEdit) < 0 then
-      ShowMessage('Informe um valor válido no campo de Saldo Devedor.')
-    else
-      FSaldoDevedor := StrToFloat(TextOnEdit);
-  end
-  else
-    ShowMessage('Informe um valor válido no campo de Saldo Devedor.');
+//  TextOnEdit := EdtSaldoDevedor.Text;
+//
+//  if EdtSaldoDevedor.Text = EmptyStr then
+//    TextOnEdit := '0';
+//
+//  if TryStrToCurr(TextOnEdit, Value) then
+//  begin
+//    if  StrToFloat(TextOnEdit) < 0 then
+//      ShowMessage('Informe um valor válido no campo de Saldo Devedor.')
+//    else
+//      FSaldoDevedor := StrToFloat(TextOnEdit);
+//  end
+//  else
+//    ShowMessage('Informe um valor válido no campo de Saldo Devedor.');
 end;
 
 procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
   FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, FSaldoDevedor);
-  ShowMessage('Os dados de '+ EdtNome.Text +' foram adicionados a memória com sucesso!');
-  LimparCampos;
+//  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnBuscarImoveisClick(Sender: TObject);
@@ -127,8 +127,11 @@ end;
 
 procedure TfrmPrincipal.btnCarregarClick(Sender: TObject);
 begin
-  FViewModel.CarregarPessoaBanco;
-  ShowMessage('Os dados adicionados no banco foram carregados na memória com sucesso!');
+  lblStatus.Left := 418;
+  lblStatus.Visible := True;
+  lblStatus.Caption := 'Salvando os dados na memória...';
+  FViewModel.CarregarPessoaBanco(False);
+  lblStatus.Visible := False;
 end;
 
 procedure TfrmPrincipal.btnExcluirClick(Sender: TObject);
@@ -142,7 +145,7 @@ begin
      exit;
   end;
 
-  FViewModel.CarregarPessoaBanco;
+  FViewModel.CarregarPessoaBanco(True);
 
   frmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, FViewModel);
   frmAuxiliarPrincipal.pnlTipExcluir.Visible := True;
@@ -155,7 +158,6 @@ begin
                     mtConfirmation, [mbYes, mbNo], 0) = mrYes then
       begin
         FViewModel.ExcluirPessoaPorId(IdSelecionado);
-        ShowMessage('Pessoa com ID ' + IntToStr(IdSelecionado) + ' foi excluída.');
       end
       else
         ShowMessage('A exclusão foi cancelada.');
@@ -165,14 +167,16 @@ begin
   finally
     frmAuxiliarPrincipal.Free;
   end;
-
-  LimparCampos;
+//  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
 begin
+  lblStatus.Left := 25;
+  lblStatus.Visible := True;
+  lblStatus.Caption := 'Salvando os dados da memória no banco de dados...';
   FViewModel.GravarPessoaBanco;
-  ShowMessage('Os dados de '+ EdtNome.Text +' foram salvos no banco de dados com sucesso!');
+  lblStatus.Visible := False;
 end;
 
 procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);

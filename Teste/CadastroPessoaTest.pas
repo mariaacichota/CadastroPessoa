@@ -12,11 +12,12 @@ type
   private
     FConn: TFDConnection;
     FViewModel: TPrincipalViewModel;
+    procedure RecriarTabelas;
   public
-    [Setup]
+    [SetupFixture]
     procedure Setup;
 
-    [TearDown]
+    [TearDownFixture]
     procedure TearDown;
 
     [Test]
@@ -49,6 +50,31 @@ implementation
 uses
   System.SysUtils;
 
+procedure TCadastroPessoaTest.RecriarTabelas;
+const
+  SQL_RECRIAR_TABELA =
+    'SET NOCOUNT ON; ' +
+    'IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N''dbo.PESSOA'') AND type = N''U'') ' +
+    'DROP TABLE dbo.PESSOA; ' +
+    'CREATE TABLE dbo.PESSOA ( ' +
+    '  Id INT IDENTITY(1,1) PRIMARY KEY, ' +
+    '  NOME VARCHAR(100) NOT NULL, ' +
+    '  DATA_NASCIMENTO DATE NOT NULL, ' +
+    '  SALDO_DEVEDOR DECIMAL(19,6) NOT NULL DEFAULT 0 ' +
+    ');';
+var
+  Query: TFDQuery;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := FConn;
+    Query.SQL.Text := SQL_RECRIAR_TABELA;
+    Query.ExecSQL;
+  finally
+    Query.Free;
+  end;
+end;
+
 procedure TCadastroPessoaTest.Setup;
 begin
   FConn := TFDConnection.Create(nil);
@@ -61,6 +87,7 @@ begin
   FConn.Connected := True;
 
   FViewModel := TPrincipalViewModel.Create(FConn);
+  RecriarTabelas;
 end;
 
 procedure TCadastroPessoaTest.TearDown;

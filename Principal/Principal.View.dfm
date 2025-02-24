@@ -20,7 +20,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 0
     Width = 1048
     Height = 270
-    ActivePage = tabBuscaImovel
+    ActivePage = tabCadastroPessoa
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
@@ -96,6 +96,20 @@ object frmPrincipal: TfrmPrincipal
         Align = alTop
         Caption = 'Banco de Dados'
         TabOrder = 1
+        object lblStatus: TLabel
+          Left = 25
+          Top = 59
+          Width = 45
+          Height = 15
+          Caption = 'lblStatus'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clHotLight
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          Visible = False
+        end
         object btnCarregar: TButton
           Left = 418
           Top = 30
@@ -220,7 +234,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 520
     Top = 144
   end
-  object Conexao: TFDConnection
+  object ConexaoErrada: TFDConnection
     Params.Strings = (
       'Database=CadastroPessoa'
       'OSAuthent=Yes'

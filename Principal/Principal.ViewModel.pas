@@ -26,7 +26,7 @@ type
     procedure AdicionarPessoa(const Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
     procedure GravarPessoaBanco;
     procedure ExcluirPessoaPorId(IdSelecionado: Integer);
-    procedure CarregarPessoaBanco;
+    procedure CarregarPessoaBanco(ExcluirId: Boolean);
     procedure CarregarPessoaMemoria;
     procedure BuscarImoveisAPI;
     procedure CriarMemTablePessoa;
@@ -41,6 +41,7 @@ type
     function GetMemTable: TFDMemTable;
     function GetMemTableImovel: TFDMemTable;
     function GetMaxId: Integer;
+    function ValidaPessoa(Nome: String; DataNascimento: TDate; SaldoDevedor: Double): Boolean;
 
     property MemTableAtual: TFDMemTable read FMemTableAtual write FMemTableAtual;
   end;
@@ -98,15 +99,20 @@ end;
 
 destructor TPrincipalViewModel.Destroy;
 begin
-  FPessoas.Free;
-  FImoveis.Free;
+  FreeAndNil(FPessoas);
+  FreeAndNil(FImoveis);
+  FreeAndNil(FConn);
   inherited;
 end;
 
 procedure TPrincipalViewModel.AdicionarPessoa(const Nome: string;
   DataNascimento: TDate; SaldoDevedor: Double);
 begin
+  if not ValidaPessoa(Nome, DataNascimento, SaldoDevedor) then
+    exit;
+
   FPessoas.Add(TPessoa.Create(GetMaxId, Nome, DataNascimento, SaldoDevedor));
+  ShowMessage('Os dados de '+ Nome +' foram adicionados a memória com sucesso!');
 end;
 
 procedure TPrincipalViewModel.BuscarImoveisAPI;
@@ -133,7 +139,7 @@ begin
   end;
 end;
 
-procedure TPrincipalViewModel.CarregarPessoaBanco;
+procedure TPrincipalViewModel.CarregarPessoaBanco(ExcluirId: Boolean);
 var
   Query: TFDQuery;
   Pessoa: TPessoa;
@@ -146,18 +152,27 @@ begin
     Query.SQL.Text := 'SELECT Id, NOME, DATA_NASCIMENTO, SALDO_DEVEDOR FROM PESSOA';
     Query.Open;
     FPessoas.Clear;
-    while not Query.Eof do
+
+    if Query.IsEmpty then
+      ShowMessage('Não foram encontrados registros no banco de dados.')
+    else
     begin
-      Pessoa := TPessoa.Create(Query.FieldByName('Id').AsInteger,
-                                Query.FieldByName('NOME').AsString,
-                                Query.FieldByName('DATA_NASCIMENTO').AsDateTime,
-                                Query.FieldByName('SALDO_DEVEDOR').AsCurrency);
-      FPessoas.Add(Pessoa);
-      PopularMemTablePessoa(FmtPessoa, Query.FieldByName('Id').AsInteger,
-                                Query.FieldByName('NOME').AsString,
-                                Query.FieldByName('DATA_NASCIMENTO').AsDateTime,
-                                Query.FieldByName('SALDO_DEVEDOR').AsCurrency);
-      Query.Next;
+      while not Query.Eof do
+      begin
+        Pessoa := TPessoa.Create(Query.FieldByName('Id').AsInteger,
+                                  Query.FieldByName('NOME').AsString,
+                                  Query.FieldByName('DATA_NASCIMENTO').AsDateTime,
+                                  Query.FieldByName('SALDO_DEVEDOR').AsCurrency);
+        FPessoas.Add(Pessoa);
+        PopularMemTablePessoa(FmtPessoa, Query.FieldByName('Id').AsInteger,
+                                  Query.FieldByName('NOME').AsString,
+                                  Query.FieldByName('DATA_NASCIMENTO').AsDateTime,
+                                  Query.FieldByName('SALDO_DEVEDOR').AsCurrency);
+        Query.Next;
+      end;
+
+      if not ExcluirId then
+        ShowMessage('Os dados adicionados no banco foram carregados na memória com sucesso!');
     end;
   finally
     Query.Free;
@@ -185,13 +200,24 @@ begin
   Query := TFDQuery.Create(nil);
   try
     Query.Connection := FConn;
-    Query.SQL.Text := 'DELETE FROM PESSOA WHERE Id = :id';
-    Query.ParamByName('id').AsInteger := IdSelecionado;
-    Query.ExecSQL;
+    FConn.StartTransaction;
+    try
+      Query.SQL.Text := 'DELETE FROM PESSOA WHERE Id = :id';
+      Query.ParamByName('id').AsInteger := IdSelecionado;
+      Query.ExecSQL;
+
+      FConn.Commit;
+      ShowMessage('Pessoa com ID ' + IntToStr(IdSelecionado) + ' foi excluída.');
+    except
+      on E: Exception do
+      begin
+        FConn.Rollback;
+        raise Exception.Create('Erro ao excluir pessoa do banco: ' + E.Message);
+      end;
+    end;
   finally
     Query.Free;
   end;
-
 end;
 
 function TPrincipalViewModel.GetMaxId: Integer;
@@ -230,13 +256,27 @@ begin
   Query := TFDQuery.Create(nil);
   try
     Query.Connection := FConn;
-    for Pessoa in FPessoas do
-    begin
-      Query.SQL.Text := 'INSERT INTO PESSOA (NOME, DATA_NASCIMENTO, SALDO_DEVEDOR) VALUES (:nome, :data_nascimento, :saldo_devedor)';
-      Query.ParamByName('nome').AsString := Pessoa.Nome;
-      Query.ParamByName('data_nascimento').AsDate := Pessoa.DataNascimento;
-      Query.ParamByName('saldo_devedor').AsCurrency := Pessoa.SaldoDevedor;
-      Query.ExecSQL;
+    FConn.StartTransaction;
+    try
+      for Pessoa in FPessoas do
+      begin
+        if ValidaPessoa(Pessoa.Nome, Pessoa.DataNascimento, Pessoa.SaldoDevedor) then
+        begin
+          Query.SQL.Text := 'INSERT INTO PESSOA (NOME, DATA_NASCIMENTO, SALDO_DEVEDOR) VALUES (:nome, :data_nascimento, :saldo_devedor)';
+          Query.ParamByName('nome').AsString := Pessoa.Nome;
+          Query.ParamByName('data_nascimento').AsDate := Pessoa.DataNascimento;
+          Query.ParamByName('saldo_devedor').AsCurrency := Pessoa.SaldoDevedor;
+          Query.ExecSQL;
+        end;
+      end;
+      FConn.Commit;
+      ShowMessage('Os dados da memória foram salvos no banco de dados com sucesso!');
+    except
+      on E: Exception do
+      begin
+        FConn.Rollback;
+        raise Exception.Create('Erro ao gravar pessoa no banco: ' + E.Message);
+      end;
     end;
   finally
     Query.Free;
@@ -357,12 +397,47 @@ end;
 procedure TPrincipalViewModel.PopularMemTablePessoa(MemTable: TFDMemTable; Id: Integer;
     Nome: String; DataNascimento: TDate; SaldoDevedor: Double);
 begin
-   MemTable.Append;
-   MemTable.FieldByName('Id').AsInteger := Id;
-   MemTable.FieldByName('Nome').AsString := Nome;
-   MemTable.FieldByName('Data de Nascimento').AsDateTime := DataNascimento;
-   MemTable.FieldByName('Saldo Devedor').AsCurrency := SaldoDevedor;
-   MemTable.Post;
+  MemTable.Append;
+  MemTable.FieldByName('Id').AsInteger := Id;
+  MemTable.FieldByName('Nome').AsString := Nome;
+  MemTable.FieldByName('Data de Nascimento').AsDateTime := DataNascimento;
+  MemTable.FieldByName('Saldo Devedor').AsCurrency := SaldoDevedor;
+  MemTable.Post;
+end;
+
+function TPrincipalViewModel.ValidaPessoa(Nome: String;
+  DataNascimento: TDate; SaldoDevedor: Double): Boolean;
+var
+  I: Integer;
+begin
+  Result := False;
+
+  if Length(Trim(Nome)) < 3 then
+  begin
+    ShowMessage('O nome deve ter pelo menos 3 caracteres.');
+    Exit(False);
+  end;
+
+  for I := 1 to Length(Nome) do
+    if CharInSet(Nome[I], ['0'..'9']) then
+    begin
+      ShowMessage('O nome não pode conter números.');
+      Exit(False);
+    end;
+
+  if DataNascimento >= Date then
+  begin
+    ShowMessage('A data de nascimento deve ser anterior à data atual.');
+    Exit(False);
+  end;
+
+  if SaldoDevedor < 0 then
+  begin
+    ShowMessage('O saldo devedor não pode ser negativo.');
+    Exit(False);
+  end;
+
+  Result := True;
 end;
 
 end.
