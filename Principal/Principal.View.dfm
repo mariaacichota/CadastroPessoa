@@ -26,6 +26,10 @@ object frmPrincipal: TfrmPrincipal
     object tabCadastroPessoa: TTabSheet
       Caption = 'Cadastro de Pessoa'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbCadastro: TGroupBox
         Left = 0
         Top = 0
@@ -60,7 +64,6 @@ object frmPrincipal: TfrmPrincipal
           EditLabel.Height = 15
           EditLabel.Caption = 'Saldo Devedor'
           TabOrder = 2
-          OnExit = edtSaldoDevedorExit
         end
         object btnAdicionar: TButton
           Left = 655
@@ -85,7 +88,6 @@ object frmPrincipal: TfrmPrincipal
           Date = 45694.405760358790000000
           Time = 45694.405760358790000000
           TabOrder = 1
-          OnExit = edtDataNascimentoExit
         end
       end
       object gbBancoDeDados: TGroupBox
@@ -183,6 +185,10 @@ object frmPrincipal: TfrmPrincipal
     object tabBuscaImovel: TTabSheet
       Caption = 'Im'#243'veis'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0

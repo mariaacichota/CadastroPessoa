@@ -43,8 +43,6 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure btnBuscarImoveisClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure edtSaldoDevedorExit(Sender: TObject);
-    procedure edtDataNascimentoExit(Sender: TObject);
   private
     FViewModel: TPrincipalViewModel;
     FConn     : TFDConnection;
@@ -82,41 +80,15 @@ end;
 destructor TfrmPrincipal.Destroy;
 begin
   FViewModel.Free;
+  Conexao.Model.Disconect;
   FConn.Free;
   inherited;
 end;
 
-procedure TfrmPrincipal.edtDataNascimentoExit(Sender: TObject);
-begin
-//  if edtDataNascimento.Date > Now then
-//    ShowMessage('A data de nascimento não pode ser maior que a data atual.');
-end;
-
-procedure TfrmPrincipal.edtSaldoDevedorExit(Sender: TObject);
-var
-  TextOnEdit: UnicodeString;
-  Value: Currency;
-begin
-//  TextOnEdit := EdtSaldoDevedor.Text;
-//
-//  if EdtSaldoDevedor.Text = EmptyStr then
-//    TextOnEdit := '0';
-//
-//  if TryStrToCurr(TextOnEdit, Value) then
-//  begin
-//    if  StrToFloat(TextOnEdit) < 0 then
-//      ShowMessage('Informe um valor válido no campo de Saldo Devedor.')
-//    else
-//      FSaldoDevedor := StrToFloat(TextOnEdit);
-//  end
-//  else
-//    ShowMessage('Informe um valor válido no campo de Saldo Devedor.');
-end;
-
-procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
+procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
   FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, FSaldoDevedor);
-//  LimparCampos;
+  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnBuscarImoveisClick(Sender: TObject);
@@ -167,7 +139,7 @@ begin
   finally
     frmAuxiliarPrincipal.Free;
   end;
-//  LimparCampos;
+  LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
