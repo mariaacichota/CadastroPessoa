@@ -17,3 +17,5 @@ A aplicação permite:
 Além disso, alguns dados vem do consumo da API: https://developers.silbeck.com.br/mocks/apiteste/v2/aptos
 
 A Aplicação foi desenvolvida com Delphi 10.1, SQLServer; conexão via FireDAC; recebe os dados via JSONObject. Além disso, foi desenvolvida seguindo o padrão de Programação Orientada a Objeto, e organizada baseando-se no padrão de arquitetura Model-View-ViewModel.
+
+**Observa-se que para o funcionamento e validação dos testes unitários, é válido que as tabelas do banco de dados sejam recriadas para evitar conflitos.
