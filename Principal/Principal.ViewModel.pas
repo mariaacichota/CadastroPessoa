@@ -53,8 +53,8 @@ uses
 
 constructor TPrincipalViewModel.Create(AConn: TFDConnection);
 begin
-  FPessoas := TObjectList<TPessoa>.Create;
-  FImoveis := TObjectList<TImovel>.Create;
+  FPessoas := TObjectList<TPessoa>.Create(True);
+  FImoveis := TObjectList<TImovel>.Create(True);
   FConn := AConn;
   CriarMemTablePessoa;
   CriarMemTableImovel;
@@ -301,7 +301,7 @@ var
   CaracteristicasList: TObjectList<TCaracteristica>;
   I: Integer;
 begin
-  Result := TObjectList<TImovel>.Create;
+  Result := TObjectList<TImovel>.Create(True);
 
   JSONArray := TJSONObject.ParseJSONValue(JSON) as TJSONArray;
   if not Assigned(JSONArray) then
@@ -312,7 +312,7 @@ begin
     begin
       JSONObject := JSONValue as TJSONObject;
 
-      CaracteristicasList := TObjectList<TCaracteristica>.Create;
+      CaracteristicasList := TObjectList<TCaracteristica>.Create(True);
       CaracteristicasArray := JSONObject.GetValue<TJSONArray>('caracteristicas');
 
       if Assigned(CaracteristicasArray) then

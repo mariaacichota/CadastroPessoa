@@ -7,6 +7,7 @@ uses
   Principal.ViewModel, Pessoa.Model, Conexao.Model, Servidor.Controller;
 
 procedure RegistrarEndpoints;
+procedure DestroyControllerServer;
 
 implementation
 
@@ -237,6 +238,11 @@ begin
   THorse.Post('pessoas/memoria', AdicionarPessoaMemoria);
   THorse.Post('/pessoas/memoria/banco', AdicionarPessoaMemoriaBanco);
   THorse.Delete('/pessoas/:id', ExcluirPessoa);
+end;
+
+procedure DestroyControllerServer;
+begin
+  Controller.Destroy;
 end;
 
 end.

@@ -116,7 +116,7 @@ end;
 
 constructor TServidorController.Create(AConn: TFDConnection);
 begin
-  FPessoas := TObjectList<TPessoa>.Create;
+  FPessoas := TObjectList<TPessoa>.Create(True);
   FConn := AConn;
 end;
 
