@@ -3,7 +3,7 @@ program CadastroPessoaProject;
 {$R *.res}
 
 uses
-  FastMM4,
+//  FastMM4,
   Vcl.Forms,
   Horse,
   Avaliacao.Model in 'Avaliação\Avaliacao.Model.pas',
@@ -18,7 +18,7 @@ uses
   Servidor.Controller in 'Servidor\Servidor.Controller.pas';
 
 begin
-  ReportMemoryLeaksOnShutdown := True;
+//  ReportMemoryLeaksOnShutdown := True;
 
   RegistrarEndpoints;
   THorse.Listen(9000);  
