@@ -26,10 +26,6 @@ object frmPrincipal: TfrmPrincipal
     object tabCadastroPessoa: TTabSheet
       Caption = 'Cadastro de Pessoa'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object gbCadastro: TGroupBox
         Left = 0
         Top = 0
@@ -185,10 +181,6 @@ object frmPrincipal: TfrmPrincipal
     object tabBuscaImovel: TTabSheet
       Caption = 'Im'#243'veis'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0
@@ -239,14 +231,5 @@ object frmPrincipal: TfrmPrincipal
   object dsImovel: TDataSource
     Left = 520
     Top = 144
-  end
-  object ConexaoErrada: TFDConnection
-    Params.Strings = (
-      'Database=CadastroPessoa'
-      'OSAuthent=Yes'
-      'Server=DESKTOP-LQTA0BU\SQLEXPRESS'
-      'DriverID=MSSQL')
-    Left = 576
-    Top = 168
   end
 end

@@ -3,6 +3,7 @@ program CadastroPessoaProject;
 {$R *.res}
 
 uses
+  FastMM4,
   Vcl.Forms,
   Horse,
   Avaliacao.Model in 'Avaliação\Avaliacao.Model.pas',

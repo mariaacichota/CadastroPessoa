@@ -34,7 +34,6 @@ type
     btnAdicionar: TButton;
     edtDataNascimento: TDateTimePicker;
     dsImovel: TDataSource;
-    ConexaoErrada: TFDConnection;
     lblStatus: TLabel;
     procedure btnAdicionarClick(Sender: TObject);
     procedure btnCarregarClick(Sender: TObject);
@@ -45,7 +44,6 @@ type
     procedure FormCreate(Sender: TObject);
   private
     FViewModel: TPrincipalViewModel;
-    FConn     : TFDConnection;
     FSaldoDevedor: Double;
     procedure LimparCampos;
     property SaldoDevedor: Double read FSaldoDevedor write FSaldoDevedor;
@@ -64,8 +62,7 @@ implementation
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
-  FConn := Conexao.Model.Connect;
-  FViewModel := TPrincipalViewModel.Create(FConn);
+  FViewModel := TPrincipalViewModel.Create(Conexao.Model.Connect);
   PgcGeral.TabIndex := 0;
   LimparCampos;
 end;
@@ -80,8 +77,6 @@ end;
 destructor TfrmPrincipal.Destroy;
 begin
   FViewModel.Free;
-  Conexao.Model.Disconect;
-  FConn.Free;
   inherited;
 end;
 
@@ -154,8 +149,12 @@ end;
 procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);
 begin
   FViewModel.CarregarPessoaMemoria;
-  frmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, FViewModel);
-  frmAuxiliarPrincipal.ShowModalAuxiliar;
+  try
+    frmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, FViewModel);
+    frmAuxiliarPrincipal.ShowModalAuxiliar;
+  finally
+    frmAuxiliarPrincipal.Free;
+  end;
 end;
 
 end.

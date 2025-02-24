@@ -100,8 +100,11 @@ end;
 destructor TPrincipalViewModel.Destroy;
 begin
   FreeAndNil(FPessoas);
-  FreeAndNil(FImoveis);
   FreeAndNil(FConn);
+  FreeAndNil(FmtImovel);
+  FreeAndNil(FmtPessoa);
+  FreeAndNil(FmtPessoaMemoria);
+
   inherited;
 end;
 
@@ -136,6 +139,7 @@ begin
 
   finally
     HTTP.Free;
+    Imovel.Free;
   end;
 end;
 
@@ -281,7 +285,6 @@ begin
   finally
     Query.Free;
   end;
-
   FPessoas.Clear;
 end;
 
