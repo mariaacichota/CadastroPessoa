@@ -33,7 +33,7 @@ begin
     Result := 'OK';
   except
     on ex:exception do
-    Result := 'Erro ao configurar banco: ' + ex.Message;
+      Result := 'Erro ao configurar banco: ' + ex.Message;
   end;
 end;
 

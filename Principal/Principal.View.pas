@@ -1,7 +1,5 @@
 unit Principal.View;
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
@@ -11,7 +9,6 @@ uses
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait,
   Vcl.Mask, Conexao.Model;
-
 type
   TfrmPrincipal = class(TForm)
     pgcGeral: TPageControl;
@@ -50,21 +47,20 @@ type
   public
     destructor Destroy; override;
   end;
-
 implementation
-
 {$R *.dfm}
-
 { TfrmPessoa }
 
-procedure TfrmPrincipal.FormCreate(Sender: TObject);
+
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
   fViewModel        := TPrincipalViewModel.Create(Conexao.Model.Connect);
   PgcGeral.TabIndex := 0;
   LimparCampos;
 end;
 
-procedure TfrmPrincipal.LimparCampos;
+
+procedure TfrmPrincipal.LimparCampos;
 begin
   edtNome.Text           := EmptyStr;
   edtSaldoDevedor.Text   := EmptyStr;
@@ -77,7 +73,8 @@ begin
   inherited;
 end;
 
-procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
+
+procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
   fViewModel.AdicionarPessoa(edtNome.Text, edtDataNascimento.Date, fSaldoDevedor);
   LimparCampos;
@@ -115,7 +112,7 @@ begin
   mFrmAuxiliarPrincipal.lblTipExcluir.Visible := True;
   try
     var mIdSelecionado := mFrmAuxiliarPrincipal.SelecionarPessoa;
-    if IdSelecionado > 0 then
+    if mIdSelecionado > 0 then
       begin
         if MessageDlg('Você confirma a exclusão da Pessoa com o Id: ' + IntToStr(mIdSelecionado) + '?',
                       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
@@ -146,12 +143,9 @@ end;
 procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);
 begin
   fViewModel.CarregarPessoaMemoria;
-  try
-    var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
-    mFrmAuxiliarPrincipal.ShowModalAuxiliar;
-  finally
-    mFrmAuxiliarPrincipal.Free;
-  end;
+
+  var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
+  mFrmAuxiliarPrincipal.ShowModalAuxiliar;
 end;
 
 end.

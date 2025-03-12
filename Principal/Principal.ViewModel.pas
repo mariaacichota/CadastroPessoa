@@ -1,13 +1,10 @@
 ﻿unit Principal.ViewModel;
-
 interface
-
 uses
   Pessoa.Model, Imovel.Model, Caracteristica.Model, Avaliacao.Model,
   FireDAC.Comp.Client, FireDAC.Stan.Def, FireDAC.Stan.Async, FireDAC.DApt,
   System.Net.HttpClientComponent, System.SysUtils, System.Generics.Collections,
   System.JSON, System.Net.HttpClient, FireDAC.Stan.Param;
-
 type
   TPrincipalViewModel = class
 
@@ -22,7 +19,6 @@ type
   public
     constructor Create(aConn: TFDConnection); reintroduce;
     destructor Destroy; override;
-
     procedure AdicionarPessoa(const aNome: string; aDataNascimento: TDate; aSaldoDevedor: Double);
     procedure GravarPessoaBanco;
     procedure ExcluirPessoaPorId(aIdSelecionado: Integer);
@@ -34,7 +30,6 @@ type
     procedure PopularMemTablePessoa(aMemTable: TFDMemTable; aId: Integer; aNome: String; aDataNascimento: TDate; aSaldoDevedor: Double);
     procedure PopularMemTableImovel(aMemTable: TFDMemTable; aCodigo, aNome: String; aPreco: Double; aCaracteristicas: TObjectList<TCaracteristica>);
     procedure LimparDadosMemTable(aMemTable: TFDMemTable);
-
     function JSONParaImovel(aJSON: string): TObjectList<TImovel>;
     function ObterImoveis: TObjectList<TImovel>;
     function ObterPessoas: TObjectList<TPessoa>;
@@ -42,12 +37,11 @@ type
     function GetMemTableImovel: TFDMemTable;
     function GetMaxId: Integer;
     function ValidaPessoa(aNome: String; aDataNascimento: TDate; aSaldoDevedor: Double): Boolean;
-
     property MemTableAtual: TFDMemTable read FMemTableAtual write FMemTableAtual;
   end;
-
 implementation
-
+
+
 uses
   Data.DB, Vcl.Dialogs;
 
@@ -59,7 +53,6 @@ begin
   CriarMemTablePessoa;
   CriarMemTableImovel;
 end;
-
 procedure TPrincipalViewModel.CriarMemTableImovel;
 begin
   fmtImovel := TFDMemTable.Create(nil);
@@ -94,10 +87,8 @@ begin
   FreeAndNil(fmtImovel);
   FreeAndNil(fmtPessoa);
   FreeAndNil(fmtPessoaMemoria);
-
   inherited;
 end;
-
 procedure TPrincipalViewModel.AdicionarPessoa(const aNome: string;
   aDataNascimento: TDate; aSaldoDevedor: Double);
 begin
@@ -112,13 +103,11 @@ end;
 procedure TPrincipalViewModel.BuscarImoveisAPI;
 begin
   FImoveis.Clear;
-
   var mHTTP := TNetHTTPClient.Create(nil);
   try
-    var mResponse := HTTP.Get('https://developers.silbeck.com.br/mocks/apiteste/v2/aptos').ContentAsString;
+    var mResponse := mHTTP.Get('https://developers.silbeck.com.br/mocks/apiteste/v2/aptos').ContentAsString;
     FImoveis := JSONParaImovel(mResponse);
     LimparDadosMemTable(fmtImovel);
-
     for var mImovel in FImoveis do
       begin
         PopularMemTableImovel(fmtImovel,
@@ -126,7 +115,6 @@ begin
       end;
   finally
     mHTTP.Free;
-    mImovel.Free;
   end;
 end;
 
@@ -134,14 +122,12 @@ procedure TPrincipalViewModel.CarregarPessoaBanco(aExcluirId: Boolean);
 begin
   LimparDadosMemTable(fmtPessoa);
   FMemTableAtual := fmtPessoa;
-
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     mQuery.SQL.Text   := 'SELECT id, nome, data_nascimento, saldo_devedor FROM pessoa';
     mQuery.Open;
     FPessoas.Clear;
-
     if mQuery.IsEmpty then
       ShowMessage('Não foram encontrados registros no banco de dados.')
     else
@@ -152,14 +138,13 @@ begin
                                       mQuery.FieldByName('nome').AsString,
                                       mQuery.FieldByName('data_nascimento').AsDateTime,
                                       mQuery.FieldByName('saldo_devedor').AsCurrency);
-            FPessoas.Add(Pessoa);
+            FPessoas.Add(mPessoa);
             PopularMemTablePessoa(fmtPessoa, mQuery.FieldByName('id').AsInteger,
                                       mQuery.FieldByName('nome').AsString,
                                       mQuery.FieldByName('data_nascimento').AsDateTime,
                                       mQuery.FieldByName('saldo_devedor').AsCurrency);
             mQuery.Next;
           end;
-
         if not aExcluirId then
           ShowMessage('Os dados adicionados no banco foram carregados na memória com sucesso!');
       end;
@@ -175,7 +160,7 @@ begin
   MemTableAtual := fmtPessoaMemoria;
 
   var mPessoas := ObterPessoas;
-  for mPessoa in mPessoas do
+  for var mPessoa in mPessoas do
     begin
       PopularMemTablePessoa(fmtPessoaMemoria, mPessoa.Id, mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor);
     end;
@@ -191,9 +176,7 @@ begin
       mQuery.SQL.Text := 'DELETE FROM pessoa WHERE id = :mId';
       mQuery.ParamByName('mId').AsInteger := aIdSelecionado;
       mQuery.ExecSQL;
-
       fConn.Commit;
-
       ShowMessage('Pessoa com ID ' + IntToStr(aIdSelecionado) + ' foi excluída.');
     except
       on E: Exception do
@@ -210,16 +193,13 @@ end;
 function TPrincipalViewModel.GetMaxId: Integer;
 begin
   Result := 0;
-
   var mQuery  := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     mQuery.SQL.Text := 'SELECT ISNULL(MAX(id), 0)+1 AS max_id FROM pessoa';
     mQuery.Open;
-
     if not mQuery.IsEmpty then
       Result := mQuery.FieldByName('max_id').AsInteger;
-
   finally
     mQuery.Free;
   end;
@@ -253,9 +233,7 @@ begin
               mQuery.ExecSQL;
             end;
         end;
-
       fConn.Commit;
-
       ShowMessage('Os dados da memória foram salvos no banco de dados com sucesso!');
     except
       on E: Exception do
@@ -267,26 +245,21 @@ begin
   finally
     mQuery.Free;
   end;
-
   FPessoas.Clear;
 end;
 
 function TPrincipalViewModel.JSONParaImovel(aJSON: string): TObjectList<TImovel>;
 begin
   Result := TObjectList<TImovel>.Create(True);
-
   var mJSONArray := TJSONObject.ParseJSONValue(aJSON) as TJSONArray;
-
   if not Assigned(mJSONArray) then
     Exit;
-
   try
     for var mJSONValue in mJSONArray do
     begin
-      var mJSONObject           := JSONValue as TJSONObject;
+      var mJSONObject           := mJSONValue as TJSONObject;
       var mCaracteristicasList  := TObjectList<TCaracteristica>.Create(True);
-      var mCaracteristicasArray := JSONObject.GetValue<TJSONArray>('caracteristicas');
-
+      var mCaracteristicasArray := mJSONValue.GetValue<TJSONArray>('caracteristicas');
       if Assigned(mCaracteristicasArray) then
         begin
           for var I := 0 to mCaracteristicasArray.Count - 1 do
@@ -300,10 +273,12 @@ begin
             end;
         end;
 
-      var mAvaliacaoJSON := JSONObject.GetValue<TJSONObject>('avaliacao');
+      var mAvaliacaoJSON := mJSONObject.GetValue<TJSONObject>('avaliacao');
+      var mAvaliacao := nil;
+
       if Assigned(mAvaliacaoJSON) then
         begin
-          var mAvaliacao := TAvaliacao.Create(
+          mAvaliacao := TAvaliacao.Create(
             mAvaliacaoJSON.GetValue<Double>('nota', 0.0),
             mAvaliacaoJSON.GetValue<Integer>('quantidade', 0)
           );
@@ -321,14 +296,12 @@ begin
         mCaracteristicasList,
         mAvaliacao
       );
-
       Result.Add(mImovel);
     end;
   finally
     mJSONArray.Free;
   end;
 end;
-
 procedure TPrincipalViewModel.LimparDadosMemTable(aMemTable: TFDMemTable);
 begin
   aMemTable.EmptyDataSet;
@@ -356,12 +329,11 @@ begin
       else
         mStrCaracteristicas := mStrCaracteristicas + ', ' + mCaracteristica.Nome;
     end;
-
   aMemTable.Append;
   aMemTable.FieldByName('Código').AsString := aCodigo;
   aMemTable.FieldByName('Nome').AsString := aNome;
   aMemTable.FieldByName('Preço').AsCurrency := aPreco;
-  aMemTable.FieldByName('Características').AsString := strCaracteristicas;
+  aMemTable.FieldByName('Características').AsString := mStrCaracteristicas;
   aMemTable.Post;
 end;
 
@@ -380,13 +352,11 @@ function TPrincipalViewModel.ValidaPessoa(aNome: String;
   aDataNascimento: TDate; aSaldoDevedor: Double): Boolean;
 begin
   Result := False;
-
   if Length(Trim(aNome)) < 3 then
     begin
       ShowMessage('O nome deve ter pelo menos 3 caracteres.');
       Exit(False);
     end;
-
   for var I := 1 to Length(aNome) do
     begin
       if CharInSet(aNome[I], ['0'..'9']) then
@@ -395,19 +365,16 @@ begin
           Exit(False);
         end;
     end;
-
   if aDataNascimento >= Date then
     begin
       ShowMessage('A data de nascimento deve ser anterior à data atual.');
       Exit(False);
     end;
-
   if aSaldoDevedor < 0 then
     begin
       ShowMessage('O saldo devedor não pode ser negativo.');
       Exit(False);
     end;
-
   Result := True;
 end;
 

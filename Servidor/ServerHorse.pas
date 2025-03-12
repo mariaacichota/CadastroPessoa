@@ -49,11 +49,11 @@ begin
           mJSONObj.AddPair('DataNascimento', mQuery.FieldByName('data_nascimento').AsString);
           mJSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(mQuery.FieldByName('saldo_devedor').AsFloat));
 
-          JSONArray.AddElement(mJSONObj);
+          mJSONArray.AddElement(mJSONObj);
           mQuery.Next;
         end;
 
-      Res.Status(200).Send(JSONArray.ToJSON);
+      Res.Status(200).Send(mJSONArray.ToJSON);
     finally
       mQuery.Free;
     end;
@@ -79,23 +79,20 @@ begin
     if mJSONObj = nil then
       raise Exception.Create('JSON inválido ou mal formado.');
 
-    if not mJSONObj.TryGetValue<string>('Nome', var mNome) then
+    var mNome, mStrDataNascimento : String;
+
+    if not mJSONObj.TryGetValue<string>('Nome', mNome) then
       raise Exception.Create('Nome não encontrado ou inválido.');
 
-    if mJSONObj.TryGetValue<string>('DataNascimento', var mStrDataNascimento) then
-      begin
-        try
-          var mDataNascimento := StrToDate(mStrDataNascimento);
-        except
-          on E: EConvertError do
-            raise Exception.Create('Data de nascimento inválida.');
-        end;
-      end;
 
-    if not mJSONObj.TryGetValue<Double>('SaldoDevedor', var SaldoDevedor) then
+    if not mJSONObj.TryGetValue<string>('DataNascimento', mStrDataNascimento) then
+      raise Exception.Create('Data de nascimento inválida.');
+
+    var mSaldoDevedor : Double;
+    if not mJSONObj.TryGetValue<Double>('SaldoDevedor', mSaldoDevedor) then
       raise Exception.Create('SaldoDevedor não encontrado ou inválido.');
 
-    Controller.AdicionarPessoaBanco(mNome, mDataNascimento, mSaldoDevedor);
+    Controller.AdicionarPessoaBanco(mNome, StrToDate(mStrDataNascimento), mSaldoDevedor);
     Res.Status(201).Send('Pessoa adicionada com sucesso!');
   except
     on E: Exception do
@@ -132,23 +129,19 @@ begin
     if mJSONObj = nil then
       raise Exception.Create('JSON inválido ou mal formado.');
 
+    var mNome, mStrDataNascimento : String;
+
     if not mJSONObj.TryGetValue<string>('Nome', var mNome) then
       raise Exception.Create('Nome não encontrado ou inválido.');
 
-    if mJSONObj.TryGetValue<string>('DataNascimento', var mStrDataNascimento) then
-      begin
-        try
-          var mDataNascimento := StrToDate(mStrDataNascimento);
-        except
-          on E: EConvertError do
-            raise Exception.Create('Data de nascimento inválida.');
-        end;
-      end;
+    if not mJSONObj.TryGetValue<string>('DataNascimento', var mStrDataNascimento) then
+      raise Exception.Create('Data de nascimento inválida.');
 
+    var mSaldoDevedor : Double;
     if not mJSONObj.TryGetValue<Double>('SaldoDevedor', var mSaldoDevedor) then
       raise Exception.Create('SaldoDevedor não encontrado ou inválido.');
 
-    Controller.AdicionarPessoaMemoria(mNome, mDataNascimento, mSaldoDevedor);
+    Controller.AdicionarPessoaMemoria(mNome, StrToDate(mStrDataNascimento), mSaldoDevedor);
     Res.Status(201).Send('Pessoa adicionada à memória com sucesso!');
   except
     on E: Exception do
