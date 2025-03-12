@@ -94,7 +94,7 @@ end;
 
 procedure TfrmPrincipal.btnCarregarClick(Sender: TObject);
 begin
-  lblStatus.Left    := 418;
+  lblStatus.Left    := 401;
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados na memória...';
 
@@ -142,7 +142,7 @@ end;
 
 procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
 begin
-  lblStatus.Left    := 25;
+  lblStatus.Left    := 8;
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados da memória no banco de dados...';
   FViewModel.GravarPessoaBanco;

@@ -2,8 +2,8 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Pedidos de Venda'
-  ClientHeight = 270
-  ClientWidth = 1048
+  ClientHeight = 641
+  ClientWidth = 1014
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,32 +18,34 @@ object frmPrincipal: TfrmPrincipal
   object pgcGeral: TPageControl
     Left = 0
     Top = 0
-    Width = 1048
-    Height = 270
-    ActivePage = tabCadastroPessoa
+    Width = 1014
+    Height = 641
+    ActivePage = tabBuscaImovel
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
       Caption = 'Cadastro de Pessoa'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 30
       object gbCadastro: TGroupBox
         Left = 0
         Top = 0
-        Width = 1040
-        Height = 97
+        Width = 1006
+        Height = 73
         Align = alTop
         Caption = 'Cadastro'
         TabOrder = 0
         object lblDataNascimento: TLabel
-          Left = 428
-          Top = 27
+          Left = 401
+          Top = 11
           Width = 107
           Height = 15
           Caption = 'Data de Nascimento'
         end
         object edtNome: TLabeledEdit
-          Left = 25
-          Top = 48
+          Left = 8
+          Top = 32
           Width = 387
           Height = 23
           EditLabel.Width = 33
@@ -52,8 +54,8 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 0
         end
         object edtSaldoDevedor: TLabeledEdit
-          Left = 563
-          Top = 48
+          Left = 537
+          Top = 33
           Width = 86
           Height = 23
           EditLabel.Width = 76
@@ -62,8 +64,8 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 2
         end
         object btnAdicionar: TButton
-          Left = 655
-          Top = 47
+          Left = 629
+          Top = 33
           Width = 162
           Height = 25
           Caption = 'Adicionar em mem'#243'ria'
@@ -77,8 +79,8 @@ object frmPrincipal: TfrmPrincipal
           OnClick = btnAdicionarClick
         end
         object edtDataNascimento: TDateTimePicker
-          Left = 436
-          Top = 48
+          Left = 401
+          Top = 32
           Width = 121
           Height = 23
           Date = 45694.405760358790000000
@@ -88,15 +90,15 @@ object frmPrincipal: TfrmPrincipal
       end
       object gbBancoDeDados: TGroupBox
         Left = 0
-        Top = 97
-        Width = 1040
-        Height = 80
+        Top = 73
+        Width = 1006
+        Height = 74
         Align = alTop
         Caption = 'Banco de Dados'
         TabOrder = 1
         object lblStatus: TLabel
-          Left = 25
-          Top = 59
+          Left = 8
+          Top = 48
           Width = 45
           Height = 15
           Caption = 'lblStatus'
@@ -109,9 +111,9 @@ object frmPrincipal: TfrmPrincipal
           Visible = False
         end
         object btnCarregar: TButton
-          Left = 418
-          Top = 30
-          Width = 266
+          Left = 401
+          Top = 18
+          Width = 393
           Height = 25
           Caption = 'Carregar (banco de dados >> mem'#243'ria)'
           Font.Charset = DEFAULT_CHARSET
@@ -124,8 +126,8 @@ object frmPrincipal: TfrmPrincipal
           OnClick = btnCarregarClick
         end
         object btnExcluir: TButton
-          Left = 297
-          Top = 30
+          Left = 280
+          Top = 18
           Width = 115
           Height = 25
           Caption = 'Excluir por Id'
@@ -139,8 +141,8 @@ object frmPrincipal: TfrmPrincipal
           OnClick = btnExcluirClick
         end
         object btnGravar: TButton
-          Left = 25
-          Top = 30
+          Left = 8
+          Top = 18
           Width = 266
           Height = 25
           Caption = 'Gravar (mem'#243'ria >> banco de dados)'
@@ -156,13 +158,14 @@ object frmPrincipal: TfrmPrincipal
       end
       object pnlFooterPessoa: TPanel
         Left = 0
-        Top = 177
-        Width = 1040
+        Top = 147
+        Width = 1006
         Height = 59
         Align = alTop
         TabOrder = 2
+        ExplicitTop = 177
         object btnMostrar: TButton
-          Left = 25
+          Left = 8
           Top = 18
           Width = 266
           Height = 25
@@ -184,12 +187,12 @@ object frmPrincipal: TfrmPrincipal
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0
-        Width = 1040
+        Width = 1006
         Height = 59
         Align = alTop
         TabOrder = 0
         object btnBuscarImoveis: TButton
-          Left = 16
+          Left = 8
           Top = 18
           Width = 115
           Height = 25
@@ -207,22 +210,28 @@ object frmPrincipal: TfrmPrincipal
       object pnlGridImoveis: TPanel
         Left = 0
         Top = 59
-        Width = 1040
-        Height = 181
+        Width = 1006
+        Height = 552
         Align = alClient
         TabOrder = 1
         object gridImoveis: TDBGrid
           Left = 1
           Top = 1
-          Width = 1038
-          Height = 179
+          Width = 1004
+          Height = 550
           Align = alClient
           DataSource = dsImovel
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
-          TitleFont.Height = -12
-          TitleFont.Name = 'Segoe UI'
+          TitleFont.Height = -13
+          TitleFont.Name = 'Verdana'
           TitleFont.Style = []
         end
       end

@@ -90,8 +90,8 @@ end;
 destructor TPrincipalViewModel.Destroy;
 begin
   FreeAndNil(FPessoas);
-  FreeAndNil(FConn);
-  FreeAndNil(FmtImovel);
+  FreeAndNil(fConn);
+  FreeAndNil(fmtImovel);
   FreeAndNil(fmtPessoa);
   FreeAndNil(fmtPessoaMemoria);
 
@@ -121,11 +121,11 @@ begin
   try
     Response := HTTP.Get('https://developers.silbeck.com.br/mocks/apiteste/v2/aptos').ContentAsString;
     FImoveis := JSONParaImovel(Response);
-    LimparDadosMemTable(FmtImovel);
+    LimparDadosMemTable(fmtImovel);
 
     for Imovel in FImoveis do
     begin
-      PopularMemTableImovel(FmtImovel,
+      PopularMemTableImovel(fmtImovel,
               Imovel.Codigo, Imovel.Nome, Imovel.Preco, Imovel.Caracteristicas);
     end;
   finally
@@ -244,7 +244,7 @@ end;
 
 function TPrincipalViewModel.GetMemTableImovel: TFDMemTable;
 begin
-  Result := FmtImovel;
+  Result := fmtImovel;
 end;
 
 procedure TPrincipalViewModel.GravarPessoaBanco;
