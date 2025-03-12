@@ -39,6 +39,7 @@ constructor TfrmAuxiliarPrincipal.Create(AOwner: TComponent;
   APessoaViewModel: TPrincipalViewModel);
 begin
   inherited Create(AOwner);
+
   FPessoaViewModel := APessoaViewModel;
   dsPessoa.DataSet := FPessoaViewModel.GetMemTable;
 end;
@@ -48,7 +49,7 @@ begin
   if not dsPessoa.DataSet.IsEmpty then
   begin
     FSelecionado := dsPessoa.DataSet.FieldByName('Id').AsInteger;
-    ModalResult := mrOk;
+    ModalResult  := mrOk;
   end;
 end;
 

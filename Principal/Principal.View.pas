@@ -62,7 +62,7 @@ implementation
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
-  FViewModel := TPrincipalViewModel.Create(Conexao.Model.Connect);
+  FViewModel        := TPrincipalViewModel.Create(Conexao.Model.Connect);
   PgcGeral.TabIndex := 0;
   LimparCampos;
 end;
@@ -94,17 +94,19 @@ end;
 
 procedure TfrmPrincipal.btnCarregarClick(Sender: TObject);
 begin
-  lblStatus.Left := 418;
+  lblStatus.Left    := 418;
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados na memória...';
+
   FViewModel.CarregarPessoaBanco(False);
+
   lblStatus.Visible := False;
 end;
 
 procedure TfrmPrincipal.btnExcluirClick(Sender: TObject);
 var
-  frmAuxiliarPrincipal: TfrmAuxiliarPrincipal;
-  IdSelecionado: Integer;
+  frmAuxiliarPrincipal : TfrmAuxiliarPrincipal;
+  IdSelecionado : Integer;
 begin
   if FViewModel.GetMemTable.IsEmpty then
   begin
@@ -134,12 +136,13 @@ begin
   finally
     frmAuxiliarPrincipal.Free;
   end;
+
   LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnGravarClick(Sender: TObject);
 begin
-  lblStatus.Left := 25;
+  lblStatus.Left    := 25;
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados da memória no banco de dados...';
   FViewModel.GravarPessoaBanco;

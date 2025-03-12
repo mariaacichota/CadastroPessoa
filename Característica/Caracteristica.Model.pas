@@ -9,14 +9,14 @@ type
   TCaracteristica = class
   private
     FNome : String;
-    FIcone: String;
-    FId: Integer;
+    FIcone : String;
+    FId : Integer;
   public
     constructor Create(Id: Integer; Nome, Icone: String);
 
-    property Id   : Integer read FId    write FId;
-    property Nome : String  read FNome  write FNome;
-    property Icone: String  read FIcone write FIcone;
+    property Id : Integer read FId write FId;
+    property Nome : String read FNome write FNome;
+    property Icone : String read FIcone write FIcone;
 
   end;
 

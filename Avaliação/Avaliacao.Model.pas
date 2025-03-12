@@ -8,13 +8,13 @@ uses
 type
   TAvaliacao = class
   private
-    FNota       : Double;
+    FNota : Double;
     FQuantidade : Integer;
 
   public
     constructor Create(Nota: Double; Quantidade: Integer);
 
-    property Nota       : Double  read FNota       write FNota;
+    property Nota : Double read FNota write FNota;
     property Quantidade : Integer read FQuantidade write FQuantidade;
   end;
 

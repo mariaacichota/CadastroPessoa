@@ -8,18 +8,18 @@ uses
 type
   TPessoa = class
   private
-    FNome           : String;
+    FNome : String;
     FDataNascimento : TDate;
-    FSaldoDevedor   : Double;
-    FId: Integer;
+    FSaldoDevedor : Double;
+    FId : Integer;
   public
     constructor Create(const Id: Integer; Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
     function ToString: string; override;
 
-    property Id             : Integer read FId             write FId;
-    property Nome           : String  read FNome           write FNome;
-    property DataNascimento : TDate   read FDataNascimento write FDataNascimento;
-    property SaldoDevedor   : Double  read FSaldoDevedor   write FSaldoDevedor;
+    property Id : Integer read FId write FId;
+    property Nome : String read FNome write FNome;
+    property DataNascimento : TDate read FDataNascimento write FDataNascimento;
+    property SaldoDevedor : Double read FSaldoDevedor write FSaldoDevedor;
   end;
 
 implementation
