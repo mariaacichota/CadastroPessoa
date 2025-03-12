@@ -15,56 +15,47 @@ var
   Controller: TServidorController;
 
 procedure ListarPessoasMemoria(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  Pessoas: TObjectList<TPessoa>;
-  Pessoa: TPessoa;
-  JSONArray: TJSONArray;
-  JSONObj: TJSONObject;
 begin
-  Pessoas := Controller.ObterPessoas;
-  JSONArray := TJSONArray.Create;
+  var mPessoas := Controller.ObterPessoas;
+  var mJSONArray := TJSONArray.Create;
   try
-    for Pessoa in Pessoas do
-    begin
-      JSONObj := TJSONObject.Create;
-      JSONObj.AddPair('Id', TJSONNumber.Create(Pessoa.Id));
-      JSONObj.AddPair('Nome', Pessoa.Nome);
-      JSONObj.AddPair('DataNascimento', DateToStr(Pessoa.DataNascimento));
-      JSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(Pessoa.SaldoDevedor));
-      JSONArray.AddElement(JSONObj);
-    end;
+    for var Pessoa in mPessoas do
+      begin
+        var mJSONObj := TJSONObject.Create;
+        mJSONObj.AddPair('Id', TJSONNumber.Create(Pessoa.Id));
+        mJSONObj.AddPair('Nome', Pessoa.Nome);
+        mJSONObj.AddPair('DataNascimento', DateToStr(Pessoa.DataNascimento));
+        mJSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(Pessoa.SaldoDevedor));
+        mJSONArray.AddElement(mJSONObj);
+      end;
 
-    Res.Status(200).Send(JSONArray.ToJSON);
+    Res.Status(200).Send(mJSONArray.ToJSON);
   finally
-    JSONArray.Free;
+    mJSONArray.Free;
   end;
 end;
 
 procedure ListarPessoas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  Query: TFDQuery;
-  JSONObj: TJSONObject;
-  JSONArray: TJSONArray;
 begin
-  JSONArray := TJSONArray.Create;
+  var mJSONArray := TJSONArray.Create;
   try
-    Query := Controller.CarregarPessoaBanco;
+    var mQuery := Controller.CarregarPessoaBanco;
     try
-      while not Query.Eof do
-      begin
-        JSONObj := TJSONObject.Create;
-        JSONObj.AddPair('Id', TJSONNumber.Create(Query.FieldByName('Id').AsInteger));
-        JSONObj.AddPair('Nome', Query.FieldByName('NOME').AsString);
-        JSONObj.AddPair('DataNascimento', Query.FieldByName('DATA_NASCIMENTO').AsString);
-        JSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(Query.FieldByName('SALDO_DEVEDOR').AsFloat));
+      while not mQuery.Eof do
+        begin
+          var mJSONObj := TJSONObject.Create;
+          mJSONObj.AddPair('Id', TJSONNumber.Create(mQuery.FieldByName('id').AsInteger));
+          mJSONObj.AddPair('Nome', mQuery.FieldByName('nome').AsString);
+          mJSONObj.AddPair('DataNascimento', mQuery.FieldByName('data_nascimento').AsString);
+          mJSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(mQuery.FieldByName('saldo_devedor').AsFloat));
 
-        JSONArray.AddElement(JSONObj);
-        Query.Next;
-      end;
+          JSONArray.AddElement(mJSONObj);
+          mQuery.Next;
+        end;
 
       Res.Status(200).Send(JSONArray.ToJSON);
     finally
-      Query.Free;
+      mQuery.Free;
     end;
   except
     on E: Exception do
@@ -73,12 +64,6 @@ begin
 end;
 
 procedure AdicionarPessoa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  JSONStr: string;
-  JSONObj: TJSONObject;
-  strDataNascimento, Nome: string;
-  DataNascimento: TDate;
-  SaldoDevedor: Double;
 begin
   if Req.Body.IsEmpty then
   begin
@@ -86,38 +71,38 @@ begin
     Exit;
   end;
 
-  JSONStr := Req.Body;
-  JSONObj := nil;
+  var mJSONStr := Req.Body;
+  var mJSONObj := nil;
 
   try
-    JSONObj := TJSONObject.ParseJSONValue(JSONStr) as TJSONObject;
-    if JSONObj = nil then
+    mJSONObj := TJSONObject.ParseJSONValue(mJSONStr) as TJSONObject;
+    if mJSONObj = nil then
       raise Exception.Create('JSON inválido ou mal formado.');
 
-    if not JSONObj.TryGetValue<string>('Nome', Nome) then
+    if not mJSONObj.TryGetValue<string>('Nome', var mNome) then
       raise Exception.Create('Nome não encontrado ou inválido.');
 
-    if JSONObj.TryGetValue<string>('DataNascimento', strDataNascimento) then
-    begin
-      try
-        DataNascimento := StrToDate(strDataNascimento);
-      except
-        on E: EConvertError do
-          raise Exception.Create('Data de nascimento inválida.');
+    if mJSONObj.TryGetValue<string>('DataNascimento', var mStrDataNascimento) then
+      begin
+        try
+          var mDataNascimento := StrToDate(mStrDataNascimento);
+        except
+          on E: EConvertError do
+            raise Exception.Create('Data de nascimento inválida.');
+        end;
       end;
-    end;
 
-    if not JSONObj.TryGetValue<Double>('SaldoDevedor', SaldoDevedor) then
+    if not mJSONObj.TryGetValue<Double>('SaldoDevedor', var SaldoDevedor) then
       raise Exception.Create('SaldoDevedor não encontrado ou inválido.');
 
-    Controller.AdicionarPessoaBanco(Nome, DataNascimento, SaldoDevedor);
+    Controller.AdicionarPessoaBanco(mNome, mDataNascimento, mSaldoDevedor);
     Res.Status(201).Send('Pessoa adicionada com sucesso!');
   except
     on E: Exception do
       Res.Status(400).Send('Erro ao adicionar pessoa: ' + E.Message);
   end;
 
-  JSONObj.Free;
+  mJSONObj.Free;
 end;
 
 procedure AdicionarPessoaMemoriaBanco(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -132,60 +117,52 @@ begin
 end;
 
 procedure AdicionarPessoaMemoria(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  JSONStr: string;
-  JSONObj: TJSONObject;
-  strDataNascimento, Nome: string;
-  DataNascimento: TDate;
-  SaldoDevedor: Double;
 begin
   if Req.Body.IsEmpty then
-  begin
-    Res.Status(400).Send('Corpo da requisição vazio.');
-    Exit;
-  end;
-
-  JSONStr := Req.Body;
-  JSONObj := nil;
-
-  try
-    JSONObj := TJSONObject.ParseJSONValue(JSONStr) as TJSONObject;
-    if JSONObj = nil then
-      raise Exception.Create('JSON inválido ou mal formado.');
-
-    if not JSONObj.TryGetValue<string>('Nome', Nome) then
-      raise Exception.Create('Nome não encontrado ou inválido.');
-
-    if JSONObj.TryGetValue<string>('DataNascimento', strDataNascimento) then
     begin
-      try
-        DataNascimento := StrToDate(strDataNascimento);
-      except
-        on E: EConvertError do
-          raise Exception.Create('Data de nascimento inválida.');
-      end;
+      Res.Status(400).Send('Corpo da requisição vazio.');
+      Exit;
     end;
 
-    if not JSONObj.TryGetValue<Double>('SaldoDevedor', SaldoDevedor) then
+  var mJSONStr := Req.Body;
+  var mJSONObj := nil;
+
+  try
+    mJSONObj := TJSONObject.ParseJSONValue(mJSONStr) as TJSONObject;
+    if mJSONObj = nil then
+      raise Exception.Create('JSON inválido ou mal formado.');
+
+    if not mJSONObj.TryGetValue<string>('Nome', var mNome) then
+      raise Exception.Create('Nome não encontrado ou inválido.');
+
+    if mJSONObj.TryGetValue<string>('DataNascimento', var mStrDataNascimento) then
+      begin
+        try
+          var mDataNascimento := StrToDate(mStrDataNascimento);
+        except
+          on E: EConvertError do
+            raise Exception.Create('Data de nascimento inválida.');
+        end;
+      end;
+
+    if not mJSONObj.TryGetValue<Double>('SaldoDevedor', var mSaldoDevedor) then
       raise Exception.Create('SaldoDevedor não encontrado ou inválido.');
 
-    Controller.AdicionarPessoaMemoria(Nome, DataNascimento, SaldoDevedor);
+    Controller.AdicionarPessoaMemoria(mNome, mDataNascimento, mSaldoDevedor);
     Res.Status(201).Send('Pessoa adicionada à memória com sucesso!');
   except
     on E: Exception do
       Res.Status(400).Send('Erro ao adicionar pessoa: ' + E.Message);
   end;
 
-  JSONObj.Free;
+  mJSONObj.Free;
 end;
 
 procedure ExcluirPessoa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  PessoaID: Integer;
 begin
-  PessoaID := Req.Params.Items['id'].ToInteger;
+  var mPessoaID := Req.Params.Items['id'].ToInteger;
   try
-    Controller.ExcluirPessoaPorId(PessoaID);
+    Controller.ExcluirPessoaPorId(mPessoaID);
     Res.Status(200).Send('Pessoa removida com sucesso!');
   except
     on E: Exception do
@@ -195,29 +172,27 @@ end;
 
 procedure ListarPessoasId(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
-  PessoaID: Integer;
   Query: TFDQuery;
   JSONObj: TJSONObject;
-  JSONArray: TJSONArray;
 begin
-  PessoaID := Req.Params.Items['id'].ToInteger;
-  JSONArray := TJSONArray.Create;
+  var mPessoaID := Req.Params.Items['id'].ToInteger;
+  var mJSONArray := TJSONArray.Create;
   try
-    Query := Controller.CarregarPessoaBancoPorId(PessoaID);
+    var mQuery := Controller.CarregarPessoaBancoPorId(mPessoaID);
     try
       while not Query.Eof do
-      begin
-        JSONObj := TJSONObject.Create;
-        JSONObj.AddPair('Id', TJSONNumber.Create(Query.FieldByName('Id').AsInteger));
-        JSONObj.AddPair('Nome', Query.FieldByName('NOME').AsString);
-        JSONObj.AddPair('DataNascimento', Query.FieldByName('DATA_NASCIMENTO').AsString);
-        JSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(Query.FieldByName('SALDO_DEVEDOR').AsFloat));
+        begin
+          var mJSONObj := TJSONObject.Create;
+          mJSONObj.AddPair('Id', TJSONNumber.Create(mQuery.FieldByName('id').AsInteger));
+          mJSONObj.AddPair('Nome', mQuery.FieldByName('nome').AsString);
+          mJSONObj.AddPair('DataNascimento', mQuery.FieldByName('data_nascimento').AsString);
+          mJSONObj.AddPair('SaldoDevedor', TJSONNumber.Create(mQuery.FieldByName('saldo_devedor').AsFloat));
 
-        JSONArray.AddElement(JSONObj);
-        Query.Next;
-      end;
+          mJSONArray.AddElement(mJSONObj);
+          mQuery.Next;
+        end;
 
-      Res.Status(200).Send(JSONArray.ToJSON);
+      Res.Status(200).Send(mJSONArray.ToJSON);
     finally
       Query.Free;
     end;

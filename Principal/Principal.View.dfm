@@ -20,7 +20,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 0
     Width = 1014
     Height = 641
-    ActivePage = tabBuscaImovel
+    ActivePage = tabCadastroPessoa
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
@@ -36,6 +36,7 @@ object frmPrincipal: TfrmPrincipal
         Align = alTop
         Caption = 'Cadastro'
         TabOrder = 0
+        ExplicitLeft = -3
         object lblDataNascimento: TLabel
           Left = 401
           Top = 11
@@ -54,8 +55,8 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 0
         end
         object edtSaldoDevedor: TLabeledEdit
-          Left = 537
-          Top = 33
+          Left = 528
+          Top = 32
           Width = 86
           Height = 23
           EditLabel.Width = 76
@@ -64,8 +65,8 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 2
         end
         object btnAdicionar: TButton
-          Left = 629
-          Top = 33
+          Left = 620
+          Top = 32
           Width = 162
           Height = 25
           Caption = 'Adicionar em mem'#243'ria'
@@ -113,7 +114,7 @@ object frmPrincipal: TfrmPrincipal
         object btnCarregar: TButton
           Left = 401
           Top = 18
-          Width = 393
+          Width = 381
           Height = 25
           Caption = 'Carregar (banco de dados >> mem'#243'ria)'
           Font.Charset = DEFAULT_CHARSET

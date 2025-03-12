@@ -39,7 +39,7 @@ object frmAuxiliarPrincipal: TfrmAuxiliarPrincipal
     Visible = False
     object lblTipExcluir: TLabel
       Left = 8
-      Top = 14
+      Top = 18
       Width = 324
       Height = 13
       Caption = 'Clique duas vezes para selecionar o Id que deseja excluir.'

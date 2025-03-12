@@ -18,8 +18,8 @@ type
     lblTipExcluir: TLabel;
     procedure gridAuxiliarPessoaDblClick(Sender: TObject);
   private
-    FPessoaViewModel: TPrincipalViewModel;
-    FSelecionado: Integer;
+    fPessoaViewModel: TPrincipalViewModel;
+    fSelecionado: Integer;
   public
     constructor Create(AOwner: TComponent; APessoaViewModel: TPrincipalViewModel); reintroduce;
     function SelecionarPessoa: Integer;
@@ -40,23 +40,23 @@ constructor TfrmAuxiliarPrincipal.Create(AOwner: TComponent;
 begin
   inherited Create(AOwner);
 
-  FPessoaViewModel := APessoaViewModel;
+  fPessoaViewModel := APessoaViewModel;
   dsPessoa.DataSet := FPessoaViewModel.GetMemTable;
 end;
 
 procedure TfrmAuxiliarPrincipal.gridAuxiliarPessoaDblClick(Sender: TObject);
 begin
   if not dsPessoa.DataSet.IsEmpty then
-  begin
-    FSelecionado := dsPessoa.DataSet.FieldByName('Id').AsInteger;
-    ModalResult  := mrOk;
-  end;
+    begin
+      fSelecionado := dsPessoa.DataSet.FieldByName('Id').AsInteger;
+      ModalResult  := mrOk;
+    end;
 end;
 
 function TfrmAuxiliarPrincipal.SelecionarPessoa: Integer;
 begin
   ShowModalAuxiliar;
-  Result := FSelecionado;
+  Result := fSelecionado;
 end;
 
 procedure TfrmAuxiliarPrincipal.ShowModalAuxiliar;

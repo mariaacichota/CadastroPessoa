@@ -43,16 +43,13 @@ type
     procedure btnBuscarImoveisClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    FViewModel: TPrincipalViewModel;
-    FSaldoDevedor: Double;
+    fViewModel: TPrincipalViewModel;
+    fSaldoDevedor: Double;
     procedure LimparCampos;
     property SaldoDevedor: Double read FSaldoDevedor write FSaldoDevedor;
   public
     destructor Destroy; override;
   end;
-
-var
-  frmPrincipal: TfrmPrincipal;
 
 implementation
 
@@ -62,7 +59,7 @@ implementation
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
-  FViewModel        := TPrincipalViewModel.Create(Conexao.Model.Connect);
+  fViewModel        := TPrincipalViewModel.Create(Conexao.Model.Connect);
   PgcGeral.TabIndex := 0;
   LimparCampos;
 end;
@@ -76,20 +73,20 @@ end;
 
 destructor TfrmPrincipal.Destroy;
 begin
-  FViewModel.Free;
+  fViewModel.Free;
   inherited;
 end;
 
 procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
-  FViewModel.AdicionarPessoa(EdtNome.Text, EdtDataNascimento.Date, FSaldoDevedor);
+  fViewModel.AdicionarPessoa(edtNome.Text, edtDataNascimento.Date, fSaldoDevedor);
   LimparCampos;
 end;
 
 procedure TfrmPrincipal.btnBuscarImoveisClick(Sender: TObject);
 begin
-  FViewModel.BuscarImoveisAPI;
-  dsImovel.DataSet := FViewModel.GetMemTableImovel;
+  fViewModel.BuscarImoveisAPI;
+  dsImovel.DataSet := fViewModel.GetMemTableImovel;
 end;
 
 procedure TfrmPrincipal.btnCarregarClick(Sender: TObject);
@@ -98,43 +95,40 @@ begin
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados na memória...';
 
-  FViewModel.CarregarPessoaBanco(False);
+  fViewModel.CarregarPessoaBanco(False);
 
   lblStatus.Visible := False;
 end;
 
 procedure TfrmPrincipal.btnExcluirClick(Sender: TObject);
-var
-  frmAuxiliarPrincipal : TfrmAuxiliarPrincipal;
-  IdSelecionado : Integer;
 begin
-  if FViewModel.GetMemTable.IsEmpty then
+  if fViewModel.GetMemTable.IsEmpty then
   begin
      ShowMessage('Nenhum cadastro foi encontrado. Verifique se estão em memória!');
      exit;
   end;
 
-  FViewModel.CarregarPessoaBanco(True);
+  fViewModel.CarregarPessoaBanco(True);
 
-  frmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, FViewModel);
-  frmAuxiliarPrincipal.pnlTipExcluir.Visible := True;
-  frmAuxiliarPrincipal.lblTipExcluir.Visible := True;
+  var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
+  mFrmAuxiliarPrincipal.pnlTipExcluir.Visible := True;
+  mFrmAuxiliarPrincipal.lblTipExcluir.Visible := True;
   try
-    IdSelecionado := frmAuxiliarPrincipal.SelecionarPessoa;
+    var mIdSelecionado := mFrmAuxiliarPrincipal.SelecionarPessoa;
     if IdSelecionado > 0 then
-    begin
-      if MessageDlg('Você confirma a exclusão da Pessoa com o Id: ' + IntToStr(IdSelecionado) + '?',
-                    mtConfirmation, [mbYes, mbNo], 0) = mrYes then
       begin
-        FViewModel.ExcluirPessoaPorId(IdSelecionado);
+        if MessageDlg('Você confirma a exclusão da Pessoa com o Id: ' + IntToStr(mIdSelecionado) + '?',
+                      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+          begin
+            FViewModel.ExcluirPessoaPorId(mIdSelecionado);
+          end
+        else
+          ShowMessage('A exclusão foi cancelada.');
       end
-      else
-        ShowMessage('A exclusão foi cancelada.');
-    end
     else
       ShowMessage('Nenhum Id foi selecionado, a exclusão foi cancelada.');
   finally
-    frmAuxiliarPrincipal.Free;
+    mFrmAuxiliarPrincipal.Free;
   end;
 
   LimparCampos;
@@ -145,18 +139,18 @@ begin
   lblStatus.Left    := 8;
   lblStatus.Visible := True;
   lblStatus.Caption := 'Salvando os dados da memória no banco de dados...';
-  FViewModel.GravarPessoaBanco;
+  fViewModel.GravarPessoaBanco;
   lblStatus.Visible := False;
 end;
 
 procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);
 begin
-  FViewModel.CarregarPessoaMemoria;
+  fViewModel.CarregarPessoaMemoria;
   try
-    frmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, FViewModel);
-    frmAuxiliarPrincipal.ShowModalAuxiliar;
+    var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
+    mFrmAuxiliarPrincipal.ShowModalAuxiliar;
   finally
-    frmAuxiliarPrincipal.Free;
+    mFrmAuxiliarPrincipal.Free;
   end;
 end;
 

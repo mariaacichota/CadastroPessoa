@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <ProjectName Condition="'$(ProjectName)'==''">PedidoVendaProject</ProjectName>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -138,7 +138,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Principal\Principal.ViewModel.pas"/>
+        <DCCReference Include="Servidor\ServerHorse.pas"/>
         <DCCReference Include="Conexão\Conexao.Model.pas"/>
+        <DCCReference Include="Servidor\Servidor.Controller.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -194,11 +196,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_VectorizedNotificationIcon">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-anydpi-v24</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-anydpi-v24</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -229,11 +231,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidSplashStylesV31">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\values-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -341,11 +343,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidSplashStylesV21">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\values-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\values-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -367,21 +369,21 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_AdaptiveIcon">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-anydpi-v26</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-anydpi-v26</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_NotificationIcon48">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-xhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -463,11 +465,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_Colors">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -500,11 +502,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_LauncherIcon192">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -526,21 +528,21 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_AdaptiveIconForeground">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_NotificationIcon96">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-xxxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -563,21 +565,21 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidSplashImageDefV21">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-anydpi-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-anydpi-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_AdaptiveIconMonochrome">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -589,11 +591,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_VectorizedSplashDark">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-night-anydpi-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-night-anydpi-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -605,11 +607,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_AdaptiveIconBackground">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -662,11 +664,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_VectorizedSplashV31Dark">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-night-anydpi-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-night-anydpi-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -719,11 +721,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidFileProvider">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\xml</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\xml</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -761,11 +763,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_ColorsDark">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\values-night-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\values-night-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -803,11 +805,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_AdaptiveIconV33">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-anydpi-v33</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-anydpi-v33</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -865,11 +867,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_Strings">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -887,11 +889,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_NotificationIcon24">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-mdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-mdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -907,11 +909,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_NotificationIcon72">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-xxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -922,11 +924,11 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_VectorizedSplash">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -1006,31 +1008,31 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_VectorizedSplashV31">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-anydpi-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-anydpi-v31</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_NotificationIcon36">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>res\drawable-hdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>res\drawable-hdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidClasses">
-                    <Platform Name="Android">
+                    <Platform Name="Android64">
                         <RemoteDir>classes</RemoteDir>
                         <Operation>64</Operation>
                     </Platform>
-                    <Platform Name="Android64">
+                    <Platform Name="Android">
                         <RemoteDir>classes</RemoteDir>
                         <Operation>64</Operation>
                     </Platform>
