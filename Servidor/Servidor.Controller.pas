@@ -141,8 +141,7 @@ begin
     fConn.StartTransaction;
     try
       mQuery.SQL.Add('DELETE FROM pessoa ');
-      mQuery.SQL.Add('WHERE ');
-      mQuery.SQL.Add('(id = :mId)');
+      mQuery.SQL.Add('WHERE (id = :mId)');
       mQuery.ParamByName('mId').AsInteger := mIdSelecionado;
       mQuery.ExecSQL;
 
