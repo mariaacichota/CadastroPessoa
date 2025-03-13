@@ -20,7 +20,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 0
     Width = 1014
     Height = 641
-    ActivePage = tabCadastroPessoa
+    ActivePage = tabBuscaImovel
     Align = alClient
     TabOrder = 0
     object tabCadastroPessoa: TTabSheet
@@ -35,8 +35,8 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Cadastro'
         TabOrder = 0
         object lblDataNascimento: TLabel
-          Left = 401
-          Top = 11
+          Left = 405
+          Top = 14
           Width = 107
           Height = 15
           Caption = 'Data de Nascimento'
@@ -52,7 +52,7 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 0
         end
         object edtSaldoDevedor: TLabeledEdit
-          Left = 528
+          Left = 536
           Top = 32
           Width = 86
           Height = 23
@@ -62,7 +62,7 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 2
         end
         object btnAdicionar: TButton
-          Left = 620
+          Left = 632
           Top = 32
           Width = 162
           Height = 25
@@ -77,7 +77,7 @@ object frmPrincipal: TfrmPrincipal
           OnClick = btnAdicionarClick
         end
         object edtDataNascimento: TDateTimePicker
-          Left = 401
+          Left = 405
           Top = 32
           Width = 121
           Height = 23
@@ -109,9 +109,9 @@ object frmPrincipal: TfrmPrincipal
           Visible = False
         end
         object btnCarregar: TButton
-          Left = 401
+          Left = 405
           Top = 18
-          Width = 381
+          Width = 389
           Height = 25
           Caption = 'Carregar (banco de dados >> mem'#243'ria)'
           Font.Charset = DEFAULT_CHARSET
@@ -181,20 +181,16 @@ object frmPrincipal: TfrmPrincipal
     object tabBuscaImovel: TTabSheet
       Caption = 'Im'#243'veis'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0
         Width = 1006
-        Height = 59
+        Height = 33
         Align = alTop
         TabOrder = 0
         object btnBuscarImoveis: TButton
           Left = 8
-          Top = 18
+          Top = 3
           Width = 115
           Height = 25
           Caption = 'Buscar'
@@ -210,16 +206,18 @@ object frmPrincipal: TfrmPrincipal
       end
       object pnlGridImoveis: TPanel
         Left = 0
-        Top = 59
+        Top = 33
         Width = 1006
-        Height = 552
+        Height = 578
         Align = alClient
         TabOrder = 1
+        ExplicitTop = 59
+        ExplicitHeight = 552
         object gridImoveis: TDBGrid
           Left = 1
           Top = 1
           Width = 1004
-          Height = 550
+          Height = 576
           Align = alClient
           DataSource = dsImovel
           Font.Charset = DEFAULT_CHARSET
