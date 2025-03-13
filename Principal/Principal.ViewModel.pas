@@ -57,6 +57,7 @@ begin
   CriarMemTablePessoa;
   CriarMemTableImovel;
 end;
+
 procedure TPrincipalViewModel.CriarMemTableImovel;
 begin
   fMtImovel := TFDMemTable.Create(nil);
@@ -141,7 +142,7 @@ begin
       ShowMessage('Não foram encontrados registros no banco de dados.')
     else
       begin
-        while not mQuery.Eof do
+        while (not mQuery.Eof) do
           begin
             var mPessoa := TPessoa.Create(mQuery.FieldByName('id').AsInteger,
                                           mQuery.FieldByName('nome').AsString,

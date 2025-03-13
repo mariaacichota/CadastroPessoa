@@ -129,7 +129,7 @@ end;
 
 procedure AdicionarPessoaMemoria(mReq: THorseRequest; mRes: THorseResponse; mNext: TProc);
 begin
-  if (mReq.Body.IsEmpty) then
+  if mReq.Body.IsEmpty then
     begin
       mRes.Status(400).Send('Corpo da requisição vazio.');
       Exit;
@@ -186,7 +186,7 @@ begin
     try
       var mQuery := gController.CarregarPessoaBancoPorId(mPessoaID);
       try
-        while not mQuery.Eof do
+        while (not mQuery.Eof) do
           begin
             var mJSONObj := TJSONObject.Create;
             try
