@@ -1,5 +1,7 @@
 unit Principal.View;
+
 interface
+
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
@@ -9,6 +11,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.Phys.MSSQL, FireDAC.Phys.MSSQLDef, FireDAC.VCLUI.Wait,
   Vcl.Mask, Conexao.Model;
+
 type
   TfrmPrincipal = class(TForm)
     pgcGeral: TPageControl;
@@ -41,16 +44,21 @@ type
     procedure FormCreate(Sender: TObject);
   private
     fViewModel: TPrincipalViewModel;
-    fSaldoDevedor: Double;
+    FSaldoDevedor: Double;
     procedure LimparCampos;
     property SaldoDevedor: Double read FSaldoDevedor write FSaldoDevedor;
   public
     destructor Destroy; override;
   end;
-implementation
-{$R *.dfm}
-{ TfrmPessoa }
 
+implementation
+
+var
+  gFrmAuxiliarPrincipal : TfrmAuxiliarPrincipal;
+
+{$R *.dfm}
+
+{ TfrmPessoa }
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
@@ -58,7 +66,6 @@ begin
   PgcGeral.TabIndex := 0;
   LimparCampos;
 end;
-
 
 procedure TfrmPrincipal.LimparCampos;
 begin
@@ -69,14 +76,14 @@ end;
 
 destructor TfrmPrincipal.Destroy;
 begin
-  fViewModel.Free;
+  FreeAndNil(fViewModel);
+
   inherited;
 end;
 
-
 procedure TfrmPrincipal.btnAdicionarClick(Sender: TObject);
 begin
-  fViewModel.AdicionarPessoa(edtNome.Text, edtDataNascimento.Date, fSaldoDevedor);
+  fViewModel.AdicionarPessoa(edtNome.Text, edtDataNascimento.Date, FSaldoDevedor);
   LimparCampos;
 end;
 
@@ -100,32 +107,29 @@ end;
 procedure TfrmPrincipal.btnExcluirClick(Sender: TObject);
 begin
   if fViewModel.GetMemTable.IsEmpty then
-  begin
-     ShowMessage('Nenhum cadastro foi encontrado. Verifique se estão em memória!');
-     exit;
-  end;
+    begin
+      ShowMessage('Nenhum cadastro foi encontrado. Verifique se estão em memória!');
+      Exit;
+    end;
 
   fViewModel.CarregarPessoaBanco(True);
 
-  var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
-  mFrmAuxiliarPrincipal.pnlTipExcluir.Visible := True;
-  mFrmAuxiliarPrincipal.lblTipExcluir.Visible := True;
+  gFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
+  gFrmAuxiliarPrincipal.pnlTipExcluir.Visible := True;
+  gFrmAuxiliarPrincipal.lblTipExcluir.Visible := True;
   try
-    var mIdSelecionado := mFrmAuxiliarPrincipal.SelecionarPessoa;
-    if mIdSelecionado > 0 then
+    var mIdSelecionado := gFrmAuxiliarPrincipal.SelecionarPessoa;
+    if (mIdSelecionado > 0) then
       begin
-        if MessageDlg('Você confirma a exclusão da Pessoa com o Id: ' + IntToStr(mIdSelecionado) + '?',
-                      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-          begin
-            FViewModel.ExcluirPessoaPorId(mIdSelecionado);
-          end
+        if MessageDlg('Você confirma a exclusão da Pessoa com o Id: ' + IntToStr(mIdSelecionado) + '?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+          fViewModel.ExcluirPessoaPorId(mIdSelecionado)
         else
           ShowMessage('A exclusão foi cancelada.');
       end
     else
       ShowMessage('Nenhum Id foi selecionado, a exclusão foi cancelada.');
   finally
-    mFrmAuxiliarPrincipal.Free;
+    FreeAndNil(gFrmAuxiliarPrincipal);
   end;
 
   LimparCampos;
@@ -144,8 +148,9 @@ procedure TfrmPrincipal.btnMostrarClick(Sender: TObject);
 begin
   fViewModel.CarregarPessoaMemoria;
 
-  var mFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
-  mFrmAuxiliarPrincipal.ShowModalAuxiliar;
+  gFrmAuxiliarPrincipal := TfrmAuxiliarPrincipal.Create(nil, fViewModel);
+  gFrmAuxiliarPrincipal.ShowModalAuxiliar;
 end;
 
 end.
+

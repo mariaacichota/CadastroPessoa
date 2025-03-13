@@ -21,7 +21,8 @@ type
     fPessoaViewModel: TPrincipalViewModel;
     fSelecionado: Integer;
   public
-    constructor Create(AOwner: TComponent; APessoaViewModel: TPrincipalViewModel); reintroduce;
+    constructor Create(mOwner: TComponent; mPessoaViewModel: TPrincipalViewModel); reintroduce;
+
     function SelecionarPessoa: Integer;
     procedure ShowModalAuxiliar;
   end;
@@ -35,18 +36,17 @@ implementation
 
 { TfrmAuxiliarPessoa }
 
-constructor TfrmAuxiliarPrincipal.Create(AOwner: TComponent;
-  APessoaViewModel: TPrincipalViewModel);
+constructor TfrmAuxiliarPrincipal.Create(mOwner: TComponent; mPessoaViewModel: TPrincipalViewModel);
 begin
-  inherited Create(AOwner);
+  inherited Create(mOwner);
 
-  fPessoaViewModel := APessoaViewModel;
-  dsPessoa.DataSet := FPessoaViewModel.GetMemTable;
+  fPessoaViewModel := mPessoaViewModel;
+  dsPessoa.DataSet := fPessoaViewModel.GetMemTable;
 end;
 
 procedure TfrmAuxiliarPrincipal.gridAuxiliarPessoaDblClick(Sender: TObject);
 begin
-  if not dsPessoa.DataSet.IsEmpty then
+  if (not dsPessoa.DataSet.IsEmpty) then
     begin
       fSelecionado := dsPessoa.DataSet.FieldByName('Id').AsInteger;
       ModalResult  := mrOk;

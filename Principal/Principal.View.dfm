@@ -26,8 +26,6 @@ object frmPrincipal: TfrmPrincipal
     object tabCadastroPessoa: TTabSheet
       Caption = 'Cadastro de Pessoa'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 30
       object gbCadastro: TGroupBox
         Left = 0
         Top = 0
@@ -36,7 +34,6 @@ object frmPrincipal: TfrmPrincipal
         Align = alTop
         Caption = 'Cadastro'
         TabOrder = 0
-        ExplicitLeft = -3
         object lblDataNascimento: TLabel
           Left = 401
           Top = 11
@@ -164,7 +161,6 @@ object frmPrincipal: TfrmPrincipal
         Height = 59
         Align = alTop
         TabOrder = 2
-        ExplicitTop = 177
         object btnMostrar: TButton
           Left = 8
           Top = 18
@@ -185,6 +181,10 @@ object frmPrincipal: TfrmPrincipal
     object tabBuscaImovel: TTabSheet
       Caption = 'Im'#243'veis'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlTopImoveis: TPanel
         Left = 0
         Top = 0

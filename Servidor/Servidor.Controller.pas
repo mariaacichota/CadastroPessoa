@@ -10,20 +10,19 @@ uses
 
 type
   TServidorController = class
-
   private
-    FPessoas: TObjectList<TPessoa>;
+    fPessoas: TObjectList<TPessoa>;
     fConn: TFDConnection;
   public
-    constructor Create(AConn: TFDConnection); reintroduce;
+    constructor Create(mConn: TFDConnection); reintroduce;
     destructor Destroy; override;
 
-    procedure AdicionarPessoaMemoria(const aNome: string; aDataNascimento: TDate; aSaldoDevedor: Double);
-    procedure AdicionarPessoaBanco(const aNome: string; aDataNascimento: TDate; aSaldoDevedor: Double);
+    procedure AdicionarPessoaMemoria(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
+    procedure AdicionarPessoaBanco(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
     procedure AdicionarPessoaMemoriaBanco;
-    procedure ExcluirPessoaPorId(aIdSelecionado: Integer);
+    procedure ExcluirPessoaPorId(mIdSelecionado: Integer);
     function CarregarPessoaBanco: TFDQuery;
-    function CarregarPessoaBancoPorId(aIdSelecionado: Integer): TFDQuery;
+    function CarregarPessoaBancoPorId(mIdSelecionado: Integer): TFDQuery;
     function ObterPessoas: TObjectList<TPessoa>;
     function GetMaxId: Integer;
   end;
@@ -32,24 +31,25 @@ implementation
 
 { TServidorController }
 
-procedure TServidorController.AdicionarPessoaMemoria(const aNome: string;
-  aDataNascimento: TDate; aSaldoDevedor: Double);
+procedure TServidorController.AdicionarPessoaMemoria(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
-  FPessoas.Add(TPessoa.Create(GetMaxId, aNome, aDataNascimento, aSaldoDevedor));
+  fPessoas.Add(TPessoa.Create(GetMaxId, mNome, mDataNascimento, mSaldoDevedor));
 end;
 
-procedure TServidorController.AdicionarPessoaBanco(const aNome: string;
-  aDataNascimento: TDate; aSaldoDevedor: Double);
+procedure TServidorController.AdicionarPessoaBanco(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     fConn.StartTransaction;
     try
-      mQuery.SQL.Text := 'INSERT INTO pessoa (nome, data_nascimento, saldo_devedor) VALUES (:mNome, :mDataNascimento, :mSaldoDevedor)';
-      mQuery.ParamByName('mNome').AsString := aNome;
-      mQuery.ParamByName('mDataNascimento').AsDate := aDataNascimento;
-      mQuery.ParamByName('mSaldoDevedor').AsCurrency := aSaldoDevedor;
+      mQuery.SQL.Add('INSERT INTO pessoa ');
+      mQuery.SQL.Add('(nome, data_nascimento, saldo_devedor) ');
+      mQuery.SQL.Add('VALUES ');
+      mQuery.SQL.Add(':mNome, :mDataNascimento, :mSaldoDevedor)');
+      mQuery.ParamByName('mNome').AsString := mNome;
+      mQuery.ParamByName('mDataNascimento').AsDate := mDataNascimento;
+      mQuery.ParamByName('mSaldoDevedor').AsCurrency := mSaldoDevedor;
       mQuery.ExecSQL;
 
       fConn.Commit;
@@ -61,77 +61,89 @@ begin
         end;
     end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
 function TServidorController.CarregarPessoaBanco: TFDQuery;
-var
-  mQuery: TFDQuery;
-begin
-  mQuery := TFDQuery.Create(nil);
-  try
-    mQuery.Connection := fConn;
-    mQuery.SQL.Text := 'SELECT id, nome, data_nascimento, saldo_devedor FROM pessoa';
-    mQuery.Open;
-
-    Result := mQuery;
-  except
-    on E: Exception do
-      begin
-        raise Exception.Create('Erro ao consultar pessoas: ' + E.Message);
-        Result := nil;
-      end;
-  end;
-end;
-
-function TServidorController.CarregarPessoaBancoPorId(
-  aIdSelecionado: Integer): TFDQuery;
 begin
   var mQuery := TFDQuery.Create(nil);
   try
-    mQuery.Connection := fConn;
-    mQuery.SQL.Text := 'SELECT id, nome, data_nascimento, saldo_devedor FROM pessoa WHERE id = :mId';
-    mQuery.ParamByName('mId').AsInteger := aIdSelecionado;
-    mQuery.Open;
+    try
+      mQuery.Connection := fConn;
+      mQuery.SQL.Add('SELECT id, nome, data_nascimento, saldo_devedor ');
+      mQuery.SQL.Add('FROM pessoa');
+      mQuery.Open;
 
-    Result := mQuery;
-  except
-    on E: Exception do
-      begin
-        raise Exception.Create('Erro ao consultar pessoa por Id: ' + E.Message);
-        Result := nil;
-      end;
+      Result := mQuery;
+    except
+      on E: Exception do
+        begin
+          raise Exception.Create('Erro ao consultar pessoas: ' + E.Message);
+          Result := nil;
+        end;
+    end;
+  finally
+    FreeAndNil(mQuery);
+  end;
+end;
+
+function TServidorController.CarregarPessoaBancoPorId(mIdSelecionado: Integer): TFDQuery;
+begin
+  var mQuery := TFDQuery.Create(nil);
+  try
+    try
+      mQuery.Connection := fConn;
+      mQuery.SQL.Add('SELECT id, nome, data_nascimento, saldo_devedor ');
+      mQuery.SQL.Add('FROM pessoa ');
+      mQuery.SQL.Add('WHERE ');
+      mQuery.SQL.Add('(id = :mId)');
+      mQuery.ParamByName('mId').AsInteger := mIdSelecionado;
+      mQuery.Open;
+
+      Result := mQuery;
+    except
+      on E: Exception do
+        begin
+          raise Exception.Create('Erro ao consultar pessoa por Id: ' + E.Message);
+          Result := nil;
+        end;
+    end;
+  finally
+    FreeAndNil(mQuery);
   end;
 end;
 
 function TServidorController.ObterPessoas: TObjectList<TPessoa>;
 begin
-  Result := FPessoas;
+  Result := fPessoas;
 end;
 
-constructor TServidorController.Create(AConn: TFDConnection);
+constructor TServidorController.Create(mConn: TFDConnection);
 begin
-  FPessoas := TObjectList<TPessoa>.Create(True);
-  fConn := AConn;
+  fPessoas := TObjectList<TPessoa>.Create(True);
+  fConn := mConn;
 end;
 
 destructor TServidorController.Destroy;
 begin
-  FreeAndNil(FPessoas);
+  FreeAndNil(fPessoas);
   FreeAndNil(fConn);
+
   inherited;
 end;
 
-procedure TServidorController.ExcluirPessoaPorId(aIdSelecionado: Integer);
+procedure TServidorController.ExcluirPessoaPorId(mIdSelecionado: Integer);
 begin
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     fConn.StartTransaction;
     try
-      mQuery.SQL.Text := 'DELETE FROM pessoa WHERE id = :mId';
-      mQuery.ParamByName('mId').AsInteger := aIdSelecionado;
+      mQuery.SQL.Add('DELETE FROM pessoa ');
+      mQuery.SQL.Add('WHERE ');
+      mQuery.SQL.Add('(id = :mId)');
+      mQuery.ParamByName('mId').AsInteger := mIdSelecionado;
       mQuery.ExecSQL;
 
       fConn.Commit;
@@ -143,7 +155,7 @@ begin
         end;
     end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
@@ -153,13 +165,14 @@ begin
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
-    mQuery.SQL.Text := 'SELECT ISNULL(MAX(id), 0)+1 AS max_id FROM pessoa';
+    mQuery.SQL.Add('SELECT ISNULL(MAX(id), 0)+1 AS max_id ');
+    mQuery.SQL.Add('FROM pessoa');
     mQuery.Open;
 
-    if not mQuery.IsEmpty then
+    if (not mQuery.IsEmpty) then
       Result := mQuery.FieldByName('max_id').AsInteger;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
@@ -169,11 +182,13 @@ begin
   try
     mQuery.Connection := fConn;
     fConn.StartTransaction;
-
     try
-      for var mPessoa in FPessoas do
+      for var mPessoa in fPessoas do
         begin
-          mQuery.SQL.Text := 'INSERT INTO pessoa (nome, data_nascimento, saldo_devedor) VALUES (:mNome, :mData, :mSaldo)';
+          mQuery.SQL.Add('INSERT INTO pessoa ');
+          mQuery.SQL.Add('(nome, data_nascimento, saldo_devedor) ');
+          mQuery.SQL.Add('VALUES ');
+          mQuery.SQL.Add('(:mNome, :mData, :mSaldo)');
           mQuery.ParamByName('mNome').AsString := mPessoa.Nome;
           mQuery.ParamByName('mData').AsDate := mPessoa.DataNascimento;
           mQuery.ParamByName('mSaldo').AsCurrency := mPessoa.SaldoDevedor;
@@ -189,10 +204,10 @@ begin
         end;
     end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 
-  FPessoas.Clear;
+  fPessoas.Clear;
 end;
 
 end.

@@ -13,7 +13,7 @@ type
     FSaldoDevedor : Double;
     FId : Integer;
   public
-    constructor Create(const Id: Integer; Nome: string; DataNascimento: TDate; SaldoDevedor: Double);
+    constructor Create(const mId: Integer; mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
     function ToString: string; override;
 
     property Id : Integer read FId write FId;
@@ -24,19 +24,18 @@ type
 
 implementation
 
-constructor TPessoa.Create(const Id: Integer; Nome: string; DataNascimento: TDate;
-  SaldoDevedor: Double);
+constructor TPessoa.Create(const mId: Integer; mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
-  FId             := Id;
-  FNome           := Nome;
-  FDataNascimento := DataNascimento;
-  FSaldoDevedor   := SaldoDevedor;
+  FId             := mId;
+  FNome           := mNome;
+  FDataNascimento := mDataNascimento;
+  FSaldoDevedor   := mSaldoDevedor;
 end;
 
 function TPessoa.ToString: string;
 begin
-  Result := Format('Nome: %s, Data de Nascimento: %s, Saldo Devedor: %.2f', [FNome
-                                      , DateToStr(FDataNascimento), FSaldoDevedor]);
+  Result := Format('Nome: %s, Data de Nascimento: %s, Saldo Devedor: %.2f',
+                   [FNome, DateToStr(FDataNascimento), FSaldoDevedor]);
 end;
 
 end.

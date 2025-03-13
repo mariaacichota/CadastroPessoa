@@ -12,24 +12,22 @@ type
     FIcone : String;
     FId : Integer;
   public
-    constructor Create(Id: Integer; Nome, Icone: String);
+    constructor Create(mId: Integer; mNome, mIcone: String);
 
     property Id : Integer read FId write FId;
     property Nome : String read FNome write FNome;
     property Icone : String read FIcone write FIcone;
-
   end;
 
 implementation
 
-
 { TCaracteristica }
 
-constructor TCaracteristica.Create(Id: Integer; Nome, Icone: String);
+constructor TCaracteristica.Create(mId: Integer; mNome, mIcone: String);
 begin
-  FId    := Id;
-  FNome  := Nome;
-  FIcone := Icone;
+  FId    := mId;
+  FNome  := mNome;
+  FIcone := mIcone;
 end;
 
 end.

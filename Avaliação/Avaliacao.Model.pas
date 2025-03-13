@@ -10,9 +10,8 @@ type
   private
     FNota : Double;
     FQuantidade : Integer;
-
   public
-    constructor Create(Nota: Double; Quantidade: Integer);
+    constructor Create(mNota: Double; mQuantidade: Integer);
 
     property Nota : Double read FNota write FNota;
     property Quantidade : Integer read FQuantidade write FQuantidade;
@@ -20,13 +19,12 @@ type
 
 implementation
 
-
 { TAvaliacao }
 
-constructor TAvaliacao.Create(Nota: Double; Quantidade: Integer);
+constructor TAvaliacao.Create(mNota: Double; mQuantidade: Integer);
 begin
-  FNota       := Nota;
-  FQuantidade := Quantidade;
+  FNota       := mNota;
+  FQuantidade := mQuantidade;
 end;
 
 end.

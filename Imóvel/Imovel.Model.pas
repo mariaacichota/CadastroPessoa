@@ -19,10 +19,9 @@ type
     FPreco : Double;
     FCaracteristicas : TObjectList<TCaracteristica>;
     FAvaliacao : TAvaliacao;
-
   public
-    constructor Create(Id, Hospedes: Integer; Url, Nome, Codigo, Imagem, Descricao: String;
-                          Preco: Double; Caracteristica: TObjectList<TCaracteristica>; Avaliacao: TAvaliacao);
+    constructor Create(mId, mHospedes: Integer; mUrl, mNome, mCodigo, mImagem, mDescricao: String;
+                       mPreco: Double; mCaracteristica: TObjectList<TCaracteristica>; mAvaliacao: TAvaliacao);
     destructor Destroy;
 
     property Id : Integer read FId write FId;
@@ -39,33 +38,32 @@ type
 
 implementation
 
-
 { TImovel }
 
-constructor TImovel.Create(Id, Hospedes: Integer; Url, Nome,
-  Codigo, Imagem, Descricao: String; Preco: Double;
-  Caracteristica: TObjectList<TCaracteristica>; Avaliacao: TAvaliacao);
+constructor TImovel.Create(mId, mHospedes: Integer; mUrl, mNome, mCodigo, mImagem, mDescricao: String;
+                           mPreco: Double; mCaracteristica: TObjectList<TCaracteristica>; mAvaliacao: TAvaliacao);
 begin
   inherited Create;
 
-  FId        := Id;
-  FHospedes  := Hospedes;
-  FUrl       := Url;
-  FNome      := Nome;
-  FCodigo    := Codigo;
-  FImagem    := Imagem;
-  FDescricao := Descricao;
-  FPreco     := Preco;
-  FAvaliacao := Avaliacao;
+  FId        := mId;
+  FHospedes  := mHospedes;
+  FUrl       := mUrl;
+  FNome      := mNome;
+  FCodigo    := mCodigo;
+  FImagem    := mImagem;
+  FDescricao := mDescricao;
+  FPreco     := mPreco;
+  FAvaliacao := mAvaliacao;
+
   FCaracteristicas := TObjectList<TCaracteristica>.Create;
-  if Assigned(Caracteristica) then
-    FCaracteristicas.AddRange(Caracteristica);
+  if Assigned(mCaracteristica) then
+    FCaracteristicas.AddRange(mCaracteristica);
 end;
 
 destructor TImovel.Destroy;
 begin
-  FCaracteristicas.Free;
-  FAvaliacao.Free;
+  FreeAndNil(FCaracteristicas);
+  FreeAndNil(FAvaliacao);
 
   inherited;
 end;

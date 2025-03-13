@@ -1,133 +1,140 @@
 ﻿unit Principal.ViewModel;
+
 interface
+
 uses
   Pessoa.Model, Imovel.Model, Caracteristica.Model, Avaliacao.Model,
   FireDAC.Comp.Client, FireDAC.Stan.Def, FireDAC.Stan.Async, FireDAC.DApt,
   System.Net.HttpClientComponent, System.SysUtils, System.Generics.Collections,
   System.JSON, System.Net.HttpClient, FireDAC.Stan.Param;
+
 type
   TPrincipalViewModel = class
-
   private
-    FPessoas: TObjectList<TPessoa>;
-    FImoveis: TObjectList<TImovel>;
     FMemTableAtual: TFDMemTable;
-    fmtPessoa: TFDMemTable;
-    fmtPessoaMemoria: TFDMemTable;
-    fmtImovel: TFDMemTable;
+    fPessoas: TObjectList<TPessoa>;
+    fImoveis: TObjectList<TImovel>;
+    fMtPessoa: TFDMemTable;
+    fMtPessoaMemoria: TFDMemTable;
+    fMtImovel: TFDMemTable;
     fConn: TFDConnection;
   public
-    constructor Create(aConn: TFDConnection); reintroduce;
+    constructor Create(mConn: TFDConnection); reintroduce;
     destructor Destroy; override;
-    procedure AdicionarPessoa(const aNome: string; aDataNascimento: TDate; aSaldoDevedor: Double);
+
+    procedure AdicionarPessoa(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
     procedure GravarPessoaBanco;
-    procedure ExcluirPessoaPorId(aIdSelecionado: Integer);
-    procedure CarregarPessoaBanco(aExcluirId: Boolean);
+    procedure ExcluirPessoaPorId(mIdSelecionado: Integer);
+    procedure CarregarPessoaBanco(mExcluirId: Boolean);
     procedure CarregarPessoaMemoria;
     procedure BuscarImoveisAPI;
     procedure CriarMemTablePessoa;
     procedure CriarMemTableImovel;
-    procedure PopularMemTablePessoa(aMemTable: TFDMemTable; aId: Integer; aNome: String; aDataNascimento: TDate; aSaldoDevedor: Double);
-    procedure PopularMemTableImovel(aMemTable: TFDMemTable; aCodigo, aNome: String; aPreco: Double; aCaracteristicas: TObjectList<TCaracteristica>);
-    procedure LimparDadosMemTable(aMemTable: TFDMemTable);
+    procedure PopularMemTablePessoa(mMemTable: TFDMemTable; mId: Integer; mNome: String; mDataNascimento: TDate; mSaldoDevedor: Double);
+    procedure PopularMemTableImovel(mMemTable: TFDMemTable; mCodigo, mNome: String; mPreco: Double; mCaracteristicas: TObjectList<TCaracteristica>);
+    procedure LimparDadosMemTable(mMemTable: TFDMemTable);
     function JSONParaImovel(aJSON: string): TObjectList<TImovel>;
     function ObterImoveis: TObjectList<TImovel>;
     function ObterPessoas: TObjectList<TPessoa>;
     function GetMemTable: TFDMemTable;
     function GetMemTableImovel: TFDMemTable;
     function GetMaxId: Integer;
-    function ValidaPessoa(aNome: String; aDataNascimento: TDate; aSaldoDevedor: Double): Boolean;
+    function ValidaPessoa(mNome: String; mDataNascimento: TDate; mSaldoDevedor: Double): Boolean;
+
     property MemTableAtual: TFDMemTable read FMemTableAtual write FMemTableAtual;
   end;
-implementation
 
+implementation
 
 uses
   Data.DB, Vcl.Dialogs;
 
-constructor TPrincipalViewModel.Create(aConn: TFDConnection);
+constructor TPrincipalViewModel.Create(mConn: TFDConnection);
 begin
-  FPessoas := TObjectList<TPessoa>.Create(True);
-  FImoveis := TObjectList<TImovel>.Create(True);
-  fConn    := aConn;
+  fPessoas := TObjectList<TPessoa>.Create(True);
+  fImoveis := TObjectList<TImovel>.Create(True);
+  fConn    := mConn;
   CriarMemTablePessoa;
   CriarMemTableImovel;
 end;
 procedure TPrincipalViewModel.CriarMemTableImovel;
 begin
-  fmtImovel := TFDMemTable.Create(nil);
-  fmtImovel.FieldDefs.Add('Codigo', ftString, 50);
-  fmtImovel.FieldDefs.Add('Nome', ftString, 100);
-  fmtImovel.FieldDefs.Add('Preco', ftCurrency);
-  fmtImovel.FieldDefs.Add('Caracteristicas', ftString, 250);
-  fmtImovel.CreateDataSet;
+  fMtImovel := TFDMemTable.Create(nil);
+  fMtImovel.FieldDefs.Add('Codigo', ftString, 50);
+  fMtImovel.FieldDefs.Add('Nome', ftString, 100);
+  fMtImovel.FieldDefs.Add('Preco', ftCurrency);
+  fMtImovel.FieldDefs.Add('Caracteristicas', ftString, 250);
+  fMtImovel.CreateDataSet;
 end;
 
 procedure TPrincipalViewModel.CriarMemTablePessoa;
 begin
-  fmtPessoa := TFDMemTable.Create(nil);
-  fmtPessoa.FieldDefs.Add('Id', ftInteger);
-  fmtPessoa.FieldDefs.Add('Nome', ftString, 100);
-  fmtPessoa.FieldDefs.Add('Data de Nascimento', ftDate);
-  fmtPessoa.FieldDefs.Add('Saldo Devedor', ftCurrency);
-  fmtPessoa.CreateDataSet;
+  fMtPessoa := TFDMemTable.Create(nil);
+  fMtPessoa.FieldDefs.Add('Id', ftInteger);
+  fMtPessoa.FieldDefs.Add('Nome', ftString, 100);
+  fMtPessoa.FieldDefs.Add('Data de Nascimento', ftDate);
+  fMtPessoa.FieldDefs.Add('Saldo Devedor', ftCurrency);
+  fMtPessoa.CreateDataSet;
 
-  fmtPessoaMemoria := TFDMemTable.Create(nil);
-  fmtPessoaMemoria.FieldDefs.Add('Id', ftInteger);
-  fmtPessoaMemoria.FieldDefs.Add('Nome', ftString, 100);
-  fmtPessoaMemoria.FieldDefs.Add('Data de Nascimento', ftDate);
-  fmtPessoaMemoria.FieldDefs.Add('Saldo Devedor', ftCurrency);
-  fmtPessoaMemoria.CreateDataSet;
+  fMtPessoaMemoria := TFDMemTable.Create(nil);
+  fMtPessoaMemoria.FieldDefs.Add('Id', ftInteger);
+  fMtPessoaMemoria.FieldDefs.Add('Nome', ftString, 100);
+  fMtPessoaMemoria.FieldDefs.Add('Data de Nascimento', ftDate);
+  fMtPessoaMemoria.FieldDefs.Add('Saldo Devedor', ftCurrency);
+  fMtPessoaMemoria.CreateDataSet;
 end;
 
 destructor TPrincipalViewModel.Destroy;
 begin
-  FreeAndNil(FPessoas);
+  FreeAndNil(fPessoas);
   FreeAndNil(fConn);
-  FreeAndNil(fmtImovel);
-  FreeAndNil(fmtPessoa);
-  FreeAndNil(fmtPessoaMemoria);
+  FreeAndNil(fMtImovel);
+  FreeAndNil(fMtPessoa);
+  FreeAndNil(fMtPessoaMemoria);
   inherited;
 end;
-procedure TPrincipalViewModel.AdicionarPessoa(const aNome: string;
-  aDataNascimento: TDate; aSaldoDevedor: Double);
+procedure TPrincipalViewModel.AdicionarPessoa(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
-  if not ValidaPessoa(aNome, aDataNascimento, aSaldoDevedor) then
-    exit;
+  if (not ValidaPessoa(mNome, mDataNascimento, mSaldoDevedor)) then
+    Exit;
 
-  FPessoas.Add(TPessoa.Create(GetMaxId, aNome, aDataNascimento, aSaldoDevedor));
+  fPessoas.Add(TPessoa.Create(GetMaxId, mNome, mDataNascimento, mSaldoDevedor));
 
-  ShowMessage('Os dados de '+ aNome +' foram adicionados a memória com sucesso!');
+  ShowMessage('Os dados de '+ mNome +' foram adicionados a memória com sucesso!');
 end;
 
 procedure TPrincipalViewModel.BuscarImoveisAPI;
 begin
-  FImoveis.Clear;
+  fImoveis.Clear;
+
   var mHTTP := TNetHTTPClient.Create(nil);
   try
     var mResponse := mHTTP.Get('https://developers.silbeck.com.br/mocks/apiteste/v2/aptos').ContentAsString;
-    FImoveis := JSONParaImovel(mResponse);
-    LimparDadosMemTable(fmtImovel);
-    for var mImovel in FImoveis do
-      begin
-        PopularMemTableImovel(fmtImovel,
-                mImovel.Codigo, mImovel.Nome, mImovel.Preco, mImovel.Caracteristicas);
-      end;
+    fImoveis := JSONParaImovel(mResponse);
+
+    LimparDadosMemTable(fMtImovel);
+
+    for var mImovel in fImoveis do
+      PopularMemTableImovel(fMtImovel,mImovel.Codigo, mImovel.Nome, mImovel.Preco, mImovel.Caracteristicas);
   finally
-    mHTTP.Free;
+    FreeAndNil(mHTTP);
   end;
 end;
 
-procedure TPrincipalViewModel.CarregarPessoaBanco(aExcluirId: Boolean);
+procedure TPrincipalViewModel.CarregarPessoaBanco(mExcluirId: Boolean);
 begin
-  LimparDadosMemTable(fmtPessoa);
-  FMemTableAtual := fmtPessoa;
+  LimparDadosMemTable(fMtPessoa);
+  FMemTableAtual := fMtPessoa;
+
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
-    mQuery.SQL.Text   := 'SELECT id, nome, data_nascimento, saldo_devedor FROM pessoa';
+    mQuery.SQL.Add('SELECT id, nome, data_nascimento, saldo_devedor ');
+    mQuery.SQL.Add('FROM pessoa');
     mQuery.Open;
-    FPessoas.Clear;
+
+    fPessoas.Clear;
+
     if mQuery.IsEmpty then
       ShowMessage('Não foram encontrados registros no banco de dados.')
     else
@@ -135,49 +142,57 @@ begin
         while not mQuery.Eof do
           begin
             var mPessoa := TPessoa.Create(mQuery.FieldByName('id').AsInteger,
-                                      mQuery.FieldByName('nome').AsString,
-                                      mQuery.FieldByName('data_nascimento').AsDateTime,
-                                      mQuery.FieldByName('saldo_devedor').AsCurrency);
-            FPessoas.Add(mPessoa);
-            PopularMemTablePessoa(fmtPessoa, mQuery.FieldByName('id').AsInteger,
-                                      mQuery.FieldByName('nome').AsString,
-                                      mQuery.FieldByName('data_nascimento').AsDateTime,
-                                      mQuery.FieldByName('saldo_devedor').AsCurrency);
+                                          mQuery.FieldByName('nome').AsString,
+                                          mQuery.FieldByName('data_nascimento').AsDateTime,
+                                          mQuery.FieldByName('saldo_devedor').AsCurrency);
+            fPessoas.Add(mPessoa);
+            PopularMemTablePessoa(fMtPessoa,
+                                  mQuery.FieldByName('id').AsInteger,
+                                  mQuery.FieldByName('nome').AsString,
+                                  mQuery.FieldByName('data_nascimento').AsDateTime,
+                                  mQuery.FieldByName('saldo_devedor').AsCurrency);
+
             mQuery.Next;
           end;
-        if not aExcluirId then
+
+        if (not mExcluirId) then
           ShowMessage('Os dados adicionados no banco foram carregados na memória com sucesso!');
       end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
 procedure TPrincipalViewModel.CarregarPessoaMemoria;
 begin
-  LimparDadosMemTable(fmtPessoaMemoria);
+  LimparDadosMemTable(fMtPessoaMemoria);
 
-  MemTableAtual := fmtPessoaMemoria;
+  MemTableAtual := fMtPessoaMemoria;
 
   var mPessoas := ObterPessoas;
   for var mPessoa in mPessoas do
     begin
-      PopularMemTablePessoa(fmtPessoaMemoria, mPessoa.Id, mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor);
+      PopularMemTablePessoa(fMtPessoaMemoria, mPessoa.Id, mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor);
     end;
 end;
 
-procedure TPrincipalViewModel.ExcluirPessoaPorId(aIdSelecionado: Integer);
+procedure TPrincipalViewModel.ExcluirPessoaPorId(mIdSelecionado: Integer);
 begin
   var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     fConn.StartTransaction;
     try
-      mQuery.SQL.Text := 'DELETE FROM pessoa WHERE id = :mId';
-      mQuery.ParamByName('mId').AsInteger := aIdSelecionado;
+      mQuery.SQL.Add('DELETE FROM pessoa ');
+      mQuery.SQL.Add('WHERE ');
+      mQuery.SQL.Add('(id = :mId)');
+      mQuery.ParamByName('mId').AsInteger := mIdSelecionado;
+
       mQuery.ExecSQL;
+
       fConn.Commit;
-      ShowMessage('Pessoa com ID ' + IntToStr(aIdSelecionado) + ' foi excluída.');
+
+      ShowMessage('Pessoa com ID ' + IntToStr(mIdSelecionado) + ' foi excluída.');
     except
       on E: Exception do
         begin
@@ -186,19 +201,22 @@ begin
         end;
     end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
 function TPrincipalViewModel.GetMaxId: Integer;
 begin
   Result := 0;
+
   var mQuery  := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
-    mQuery.SQL.Text := 'SELECT ISNULL(MAX(id), 0)+1 AS max_id FROM pessoa';
+    mQuery.SQL.Add('SELECT ISNULL(MAX(id), 0)+1 AS max_id ');
+    mQuery.SQL.Add('FROM pessoa');
     mQuery.Open;
-    if not mQuery.IsEmpty then
+
+    if (not mQuery.IsEmpty) then
       Result := mQuery.FieldByName('max_id').AsInteger;
   finally
     mQuery.Free;
@@ -212,7 +230,7 @@ end;
 
 function TPrincipalViewModel.GetMemTableImovel: TFDMemTable;
 begin
-  Result := fmtImovel;
+  Result := fMtImovel;
 end;
 
 procedure TPrincipalViewModel.GravarPessoaBanco;
@@ -222,18 +240,23 @@ begin
     mQuery.Connection := FConn;
     fConn.StartTransaction;
     try
-      for var mPessoa in FPessoas do
+      for var mPessoa in fPessoas do
         begin
           if ValidaPessoa(mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor) then
             begin
-              mQuery.SQL.Text := 'INSERT INTO pessoa (nome, data_nascimento, saldo_devedor) VALUES (:mNome, :mDataNascimento, :mSaldoDevedor)';
+              mQuery.SQL.Add('INSERT INTO pessoa ');
+              mQuery.SQL.Add('(nome, data_nascimento, saldo_devedor) ');
+              mQuery.SQL.Add('VALUES ');
+              mQuery.SQL.Add('(:mNome, :mDataNascimento, :mSaldoDevedor)');
               mQuery.ParamByName('mNome').AsString           := mPessoa.Nome;
               mQuery.ParamByName('mDataNascimento').AsDate   := mPessoa.DataNascimento;
               mQuery.ParamByName('mSaldoDevedor').AsCurrency := mPessoa.SaldoDevedor;
               mQuery.ExecSQL;
             end;
         end;
+
       fConn.Commit;
+
       ShowMessage('Os dados da memória foram salvos no banco de dados com sucesso!');
     except
       on E: Exception do
@@ -243,139 +266,142 @@ begin
         end;
     end;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
-  FPessoas.Clear;
+
+  fPessoas.Clear;
 end;
 
 function TPrincipalViewModel.JSONParaImovel(aJSON: string): TObjectList<TImovel>;
 begin
   Result := TObjectList<TImovel>.Create(True);
+
   var mJSONArray := TJSONObject.ParseJSONValue(aJSON) as TJSONArray;
-  if not Assigned(mJSONArray) then
+  if (not Assigned(mJSONArray)) then
     Exit;
+
   try
     for var mJSONValue in mJSONArray do
-    begin
-      var mJSONObject           := mJSONValue as TJSONObject;
-      var mCaracteristicasList  := TObjectList<TCaracteristica>.Create(True);
-      var mCaracteristicasArray := mJSONValue.GetValue<TJSONArray>('caracteristicas');
-      if Assigned(mCaracteristicasArray) then
-        begin
-          for var I := 0 to mCaracteristicasArray.Count - 1 do
-            begin
-              var mCaracteristica := TCaracteristica.Create(
-                mCaracteristicasArray.Items[I].GetValue<Integer>('id'),
-                mCaracteristicasArray.Items[I].GetValue<string>('nome'),
-                mCaracteristicasArray.Items[I].GetValue<string>('icone')
-              );
-              mCaracteristicasList.Add(mCaracteristica);
-            end;
-        end;
+      begin
+        var mJSONObject           := mJSONValue as TJSONObject;
+        var mCaracteristicasList  := TObjectList<TCaracteristica>.Create(True);
+        var mCaracteristicasArray := mJSONValue.GetValue<TJSONArray>('caracteristicas');
+        if Assigned(mCaracteristicasArray) then
+          begin
+            for var I := 0 to mCaracteristicasArray.Count - 1 do
+              begin
+                var mCaracteristica := TCaracteristica.Create(mCaracteristicasArray.Items[I].GetValue<Integer>('id'),
+                                                              mCaracteristicasArray.Items[I].GetValue<string>('nome'),
+                                                              mCaracteristicasArray.Items[I].GetValue<string>('icone'));
 
-      var mAvaliacaoJSON := mJSONObject.GetValue<TJSONObject>('avaliacao');
-      var mAvaliacao := nil;
+                mCaracteristicasList.Add(mCaracteristica);
+              end;
+          end;
 
-      if Assigned(mAvaliacaoJSON) then
-        begin
-          mAvaliacao := TAvaliacao.Create(
-            mAvaliacaoJSON.GetValue<Double>('nota', 0.0),
-            mAvaliacaoJSON.GetValue<Integer>('quantidade', 0)
-          );
-        end;
+        var mAvaliacaoJSON := mJSONObject.GetValue<TJSONObject>('avaliacao');
+        var mAvaliacao := nil;
 
-      var mImovel := TImovel.Create(
-        mJSONObject.GetValue<Integer>('id', 0),
-        mJSONObject.GetValue<Integer>('hospedes', 0),
-        mJSONObject.GetValue<string>('url', ''),
-        mJSONObject.GetValue<string>('nome', ''),
-        mJSONObject.GetValue<string>('codigo', ''),
-        mJSONObject.GetValue<string>('img', ''),
-        mJSONObject.GetValue<string>('descricao', ''),
-        mJSONObject.GetValue<Double>('preco', 0.0),
-        mCaracteristicasList,
-        mAvaliacao
-      );
-      Result.Add(mImovel);
-    end;
+        if Assigned(mAvaliacaoJSON) then
+          begin
+            mAvaliacao := TAvaliacao.Create(mAvaliacaoJSON.GetValue<Double>('nota', 0.0),
+                                            mAvaliacaoJSON.GetValue<Integer>('quantidade', 0));
+          end;
+
+        var mImovel := TImovel.Create(mJSONObject.GetValue<Integer>('id', 0),
+                                      mJSONObject.GetValue<Integer>('hospedes', 0),
+                                      mJSONObject.GetValue<string>('url', ''),
+                                      mJSONObject.GetValue<string>('nome', ''),
+                                      mJSONObject.GetValue<string>('codigo', ''),
+                                      mJSONObject.GetValue<string>('img', ''),
+                                      mJSONObject.GetValue<string>('descricao', ''),
+                                      mJSONObject.GetValue<Double>('preco', 0.0),
+                                      mCaracteristicasList,
+                                      mAvaliacao);
+
+        Result.Add(mImovel);
+      end;
   finally
-    mJSONArray.Free;
+    FreeAndNil(mJSONArray);
   end;
 end;
-procedure TPrincipalViewModel.LimparDadosMemTable(aMemTable: TFDMemTable);
+
+procedure TPrincipalViewModel.LimparDadosMemTable(mMemTable: TFDMemTable);
 begin
-  aMemTable.EmptyDataSet;
+  mMemTable.EmptyDataSet;
 end;
 
 function TPrincipalViewModel.ObterImoveis: TObjectList<TImovel>;
 begin
-  Result := FImoveis;
+  Result := fImoveis;
 end;
 
 function TPrincipalViewModel.ObterPessoas: TObjectList<TPessoa>;
 begin
-  Result := FPessoas;
+  Result := fPessoas;
 end;
 
-procedure TPrincipalViewModel.PopularMemTableImovel(aMemTable: TFDMemTable;
-  aCodigo, aNome: String; aPreco: Double; aCaracteristicas: TObjectList<TCaracteristica>);
+procedure TPrincipalViewModel.PopularMemTableImovel(mMemTable: TFDMemTable; mCodigo, mNome: String; mPreco: Double; mCaracteristicas: TObjectList<TCaracteristica>);
 begin
   var mStrCaracteristicas := '';
 
-  for var mCaracteristica in aCaracteristicas do
+  for var mCaracteristica in mCaracteristicas do
     begin
       if mStrCaracteristicas.IsEmpty then
         mStrCaracteristicas := mCaracteristica.Nome
       else
         mStrCaracteristicas := mStrCaracteristicas + ', ' + mCaracteristica.Nome;
     end;
-  aMemTable.Append;
-  aMemTable.FieldByName('Código').AsString := aCodigo;
-  aMemTable.FieldByName('Nome').AsString := aNome;
-  aMemTable.FieldByName('Preço').AsCurrency := aPreco;
-  aMemTable.FieldByName('Características').AsString := mStrCaracteristicas;
-  aMemTable.Post;
+
+  mMemTable.Append;
+  mMemTable.FieldByName('Código').AsString  := mCodigo;
+  mMemTable.FieldByName('Nome').AsString    := mNome;
+  mMemTable.FieldByName('Preço').AsCurrency := mPreco;
+  mMemTable.FieldByName('Características').AsString := mStrCaracteristicas;
+  mMemTable.Post;
 end;
 
-procedure TPrincipalViewModel.PopularMemTablePessoa(aMemTable: TFDMemTable; aId: Integer;
-    aNome: String; aDataNascimento: TDate; aSaldoDevedor: Double);
+procedure TPrincipalViewModel.PopularMemTablePessoa(mMemTable: TFDMemTable; mId: Integer; mNome: String; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
-  aMemTable.Append;
-  aMemTable.FieldByName('Id').AsInteger := aId;
-  aMemTable.FieldByName('Nome').AsString := aNome;
-  aMemTable.FieldByName('Data de Nascimento').AsDateTime := aDataNascimento;
-  aMemTable.FieldByName('Saldo Devedor').AsCurrency := aSaldoDevedor;
-  aMemTable.Post;
+  mMemTable.Append;
+  mMemTable.FieldByName('Id').AsInteger  := mId;
+  mMemTable.FieldByName('Nome').AsString := mNome;
+  mMemTable.FieldByName('Data de Nascimento').AsDateTime := mDataNascimento;
+  mMemTable.FieldByName('Saldo Devedor').AsCurrency      := mSaldoDevedor;
+  mMemTable.Post;
 end;
 
-function TPrincipalViewModel.ValidaPessoa(aNome: String;
-  aDataNascimento: TDate; aSaldoDevedor: Double): Boolean;
+function TPrincipalViewModel.ValidaPessoa(mNome: String; mDataNascimento: TDate; mSaldoDevedor: Double): Boolean;
 begin
   Result := False;
-  if Length(Trim(aNome)) < 3 then
+  if (Length(Trim(mNome)) < 3) then
     begin
       ShowMessage('O nome deve ter pelo menos 3 caracteres.');
       Exit(False);
     end;
-  for var I := 1 to Length(aNome) do
+
+  for var I := 1 to Length(mNome) do
     begin
-      if CharInSet(aNome[I], ['0'..'9']) then
+      if (CharInSet(mNome[I], ['0'..'9'])) then
         begin
           ShowMessage('O nome não pode conter números.');
           Exit(False);
         end;
     end;
-  if aDataNascimento >= Date then
+
+  if (mDataNascimento >= Date) then
     begin
       ShowMessage('A data de nascimento deve ser anterior à data atual.');
       Exit(False);
     end;
-  if aSaldoDevedor < 0 then
+
+  if (mSaldoDevedor < 0) then
     begin
       ShowMessage('O saldo devedor não pode ser negativo.');
       Exit(False);
     end;
+
   Result := True;
 end;
 
 end.
+

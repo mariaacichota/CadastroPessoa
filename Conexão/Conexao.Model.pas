@@ -11,49 +11,47 @@ uses
   System.IniFiles, System.SysUtils;
 
 var
-  FConnection : TFDConnection;
+  gConnection : TFDConnection;
 
-function SetupConnection(FConn: TFDConnection): String;
+function SetupConnection(mConn: TFDConnection): String;
 function Connect : TFDConnection;
 procedure Disconect;
 
 implementation
 
-function SetupConnection(FConn: TFDConnection): string;
-var
-  arq_ini : string;
-  ini : TIniFile;
+function SetupConnection(mConn: TFDConnection): string;
 begin
   try
-    FConn.Params.Values['DriverID'] := 'MSSQL';
-    FConn.Params.Values['Database'] := 'CadastroPessoa';
-    FConn.Params.Add('OSAuthent=Yes');
-    FConn.Params.Add('Server=DESKTOP-LQTA0BU\SQLEXPRESS');
+    mConn.Params.Values['DriverID'] := 'MSSQL';
+    mConn.Params.Values['Database'] := 'CadastroPessoa';
+    mConn.Params.Add('OSAuthent=Yes');
+    mConn.Params.Add('Server=DESKTOP-LQTA0BU\SQLEXPRESS');
 
     Result := 'OK';
   except
-    on ex:exception do
-      Result := 'Erro ao configurar banco: ' + ex.Message;
+    on E: Exception do
+      Result := 'Erro ao configurar banco: ' + E.Message;
   end;
 end;
 
 function Connect: TFDConnection;
 begin
-  FConnection := TFDConnection.Create(nil);
-  SetupConnection(FConnection);
-  FConnection.Connected := True;
-  Result := FConnection;
+  gConnection := TFDConnection.Create(nil);
+  SetupConnection(gConnection);
+  gConnection.Connected := True;
+
+  Result := gConnection;
 end;
 
 procedure Disconect;
 begin
-  if Assigned(FConnection) then
-  begin
-    if FConnection.Connected then
-      FConnection.Connected := False;
+  if Assigned(gConnection) then
+    begin
+      if gConnection.Connected then
+        gConnection.Connected := False;
 
-    FConnection.Free;
-  end;
+      FreeAndNil(gConnection);
+    end;
 end;
 
 end.
