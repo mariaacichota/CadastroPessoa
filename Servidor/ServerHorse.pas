@@ -60,6 +60,7 @@ begin
             finally
               FreeAndNil(mJSONObj);
             end;
+
             mQuery.Next;
           end;
 
@@ -107,7 +108,7 @@ begin
       gController.AdicionarPessoaBanco(mNome, StrToDate(mStrDataNascimento), mSaldoDevedor);
       mRes.Status(201).Send('Pessoa adicionada com sucesso!');
     finally
-       FreeAndNil(mJSONObj);
+      FreeAndNil(mJSONObj);
     end;
   except
     on E: Exception do
@@ -197,6 +198,7 @@ begin
             finally
               FreeAndNil(mJSONObj);
             end;
+
             mQuery.Next;
           end;
 

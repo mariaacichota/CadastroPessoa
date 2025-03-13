@@ -91,8 +91,10 @@ begin
   FreeAndNil(fMtImovel);
   FreeAndNil(fMtPessoa);
   FreeAndNil(fMtPessoaMemoria);
+
   inherited;
 end;
+
 procedure TPrincipalViewModel.AdicionarPessoa(const mNome: string; mDataNascimento: TDate; mSaldoDevedor: Double);
 begin
   if (not ValidaPessoa(mNome, mDataNascimento, mSaldoDevedor)) then
@@ -171,9 +173,7 @@ begin
 
   var mPessoas := ObterPessoas;
   for var mPessoa in mPessoas do
-    begin
-      PopularMemTablePessoa(fMtPessoaMemoria, mPessoa.Id, mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor);
-    end;
+    PopularMemTablePessoa(fMtPessoaMemoria, mPessoa.Id, mPessoa.Nome, mPessoa.DataNascimento, mPessoa.SaldoDevedor);
 end;
 
 procedure TPrincipalViewModel.ExcluirPessoaPorId(mIdSelecionado: Integer);
@@ -208,7 +208,7 @@ function TPrincipalViewModel.GetMaxId: Integer;
 begin
   Result := 0;
 
-  var mQuery  := TFDQuery.Create(nil);
+  var mQuery := TFDQuery.Create(nil);
   try
     mQuery.Connection := fConn;
     mQuery.SQL.Add('SELECT ISNULL(MAX(id), 0)+1 AS max_id ');
@@ -218,7 +218,7 @@ begin
     if (not mQuery.IsEmpty) then
       Result := mQuery.FieldByName('max_id').AsInteger;
   finally
-    mQuery.Free;
+    FreeAndNil(mQuery);
   end;
 end;
 
@@ -287,11 +287,11 @@ begin
         var mCaracteristicasArray := mJSONValue.GetValue<TJSONArray>('caracteristicas');
         if Assigned(mCaracteristicasArray) then
           begin
-            for var I := 0 to mCaracteristicasArray.Count - 1 do
+            for var mI := 0 to mCaracteristicasArray.Count - 1 do
               begin
-                var mCaracteristica := TCaracteristica.Create(mCaracteristicasArray.Items[I].GetValue<Integer>('id'),
-                                                              mCaracteristicasArray.Items[I].GetValue<string>('nome'),
-                                                              mCaracteristicasArray.Items[I].GetValue<string>('icone'));
+                var mCaracteristica := TCaracteristica.Create(mCaracteristicasArray.Items[mI].GetValue<Integer>('id'),
+                                                              mCaracteristicasArray.Items[mI].GetValue<string>('nome'),
+                                                              mCaracteristicasArray.Items[mI].GetValue<string>('icone'));
 
                 mCaracteristicasList.Add(mCaracteristica);
               end;
@@ -301,10 +301,8 @@ begin
         var mAvaliacao := nil;
 
         if Assigned(mAvaliacaoJSON) then
-          begin
-            mAvaliacao := TAvaliacao.Create(mAvaliacaoJSON.GetValue<Double>('nota', 0.0),
-                                            mAvaliacaoJSON.GetValue<Integer>('quantidade', 0));
-          end;
+          mAvaliacao := TAvaliacao.Create(mAvaliacaoJSON.GetValue<Double>('nota', 0.0),
+                                          mAvaliacaoJSON.GetValue<Integer>('quantidade', 0));
 
         var mImovel := TImovel.Create(mJSONObject.GetValue<Integer>('id', 0),
                                       mJSONObject.GetValue<Integer>('hospedes', 0),
@@ -378,9 +376,9 @@ begin
       Exit(False);
     end;
 
-  for var I := 1 to Length(mNome) do
+  for var mI := 1 to Length(mNome) do
     begin
-      if (CharInSet(mNome[I], ['0'..'9'])) then
+      if (CharInSet(mNome[mI], ['0'..'9'])) then
         begin
           ShowMessage('O nome não pode conter números.');
           Exit(False);
